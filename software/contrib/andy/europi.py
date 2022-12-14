@@ -17,7 +17,15 @@ import sys
 import time
 # print(sys.path)
 
-# add stubs/ to sys.path
+# add stubs/ to sys.path and also update vscode settings .vscode/settings.json
+"""
+{
+    "python.analysis.extraPaths": [
+        "software/contrib/andy/stubs",
+        "software/tests/mocks"
+    ]
+}
+"""
 import sys
 sys.path.append('/Volumes/SSD/Data/Devel/EuroPi/software/contrib/andy/stubs')
 sys.path.append('/Volumes/SSD/Data/Devel/EuroPi/software/tests/mocks')

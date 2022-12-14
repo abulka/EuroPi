@@ -3,7 +3,7 @@
 
 import asyncio
 import random
-import PySimpleGUI as sg
+import PySimpleGUI as sg  # pip install PySimpleGUI
 from master_clock import MasterClockInner
 from europi import cvs, get_cvs_snapshot_msg
 

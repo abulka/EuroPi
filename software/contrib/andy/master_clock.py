@@ -416,7 +416,6 @@ class MasterClockInner(EuroPiScript):
 
     async def main(self):
         while True:
-            display(95) # ANDY
             if not self.clockSelectionScreenActive:
                 # Display selected screen
                 if self.screen == 1:
@@ -435,8 +434,10 @@ class MasterClockInner(EuroPiScript):
             if self.running and not self.externalClockInput:
                 self.clockTrigger()
                 self.calcSleepTime()
-                await asyncio.sleep_ms(0)  # allow pin setting tasks created by clockTrigger() to run
-                self.cvs_snapshot = [cv.pin._pin.value() for cv in cvs]  # for display
+                await asyncio.sleep_ms(10)  # allow pin setting tasks created by clockTrigger() to run
+                self.cvs_snapshot = [1 if cv.pin._pin.value() else 0 for cv in cvs]  # for display
+                # the snapshot should correspond to cvs_snapshot_msg
+                print(f'cvs_snapshot: {self.cvs_snapshot}', 'cvs_snapshot_msg: ', get_cvs_snapshot_msg())
 
                 await asyncio.sleep_ms(800)  # ANDY slow down the clock
                 # ANDY this is the original code

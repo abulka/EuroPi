@@ -27,3 +27,6 @@ venv
 .idea
 dist/
 *.egg-info/
+
+hardware/pcb/expanded/
+saved_state_MasterClockInner.txt

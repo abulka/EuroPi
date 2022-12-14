@@ -7,6 +7,8 @@ import PySimpleGUI as sg  # pip install PySimpleGUI
 from master_clock import MasterClockInner
 from europi import cvs, get_cvs_snapshot_msg
 
+sg.theme('SystemDefaultForReal')  # better looking buttons
+
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
 
@@ -31,10 +33,11 @@ layout = [[sg.Text('My LED Status Indicators', size=(20, 1))],
           [sg.Text('cv4', justification='right'), LEDIndicator('_cv4_'),
            sg.Text('cv5', justification='right'), LEDIndicator('_cv5_'),
            sg.Text('cv6',  justification='right'), LEDIndicator('_cv6_')],
-           [sg.Text('', size=(None, 1), font='Helvetica 24', k='_cvs_')],
-           [sg.Text('', size=(None, 1), font='Helvetica 24', k='_cvs-msg_')],
-          [sg.Button('Andy')],
-          [sg.Button('Exit')],
+          [sg.Text('', size=(None, 1), font='Helvetica 24', k='_cvs_')],
+          [sg.Text('', size=(None, 1), font='Helvetica 24', k='_cvs-msg_')],
+          [sg.Button('Andy', use_ttk_buttons=True, font='Courier 16'),
+          sg.Button('Exit', font='Courier 16')
+           ],
           ]
 
 window = None
@@ -62,7 +65,8 @@ async def gui_window_loop():
         if event == "__TIMEOUT__":
             global mc
             # make a copy since master clock is updating it
-            cvs_snapshot = [1 if value != 0 else 0 for value in mc.cvs_snapshot]
+            cvs_snapshot = [1 if value !=
+                            0 else 0 for value in mc.cvs_snapshot]
             window['_cvs_'].update(f'{cvs_snapshot}')
             window['_cvs-msg_'].update(f'{get_cvs_snapshot_msg()}')
             for index, value in enumerate(cvs_snapshot):

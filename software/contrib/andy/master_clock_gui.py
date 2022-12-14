@@ -26,19 +26,36 @@ def SetLED(window, key, color):
     graph.draw_circle((0, 0), 12, fill_color=color, line_color=color)
 
 
-layout = [[sg.Text('My LED Status Indicators', size=(20, 1))],
-          [sg.Text('cv1', justification='right'), LEDIndicator('_cv1_'),
-           sg.Text('cv2', justification='right'), LEDIndicator('_cv2_'),
-           sg.Text('cv3', justification='right'), LEDIndicator('_cv3_')],
-          [sg.Text('cv4', justification='right'), LEDIndicator('_cv4_'),
-           sg.Text('cv5', justification='right'), LEDIndicator('_cv5_'),
-           sg.Text('cv6',  justification='right'), LEDIndicator('_cv6_')],
-          [sg.Text('', size=(None, 1), font='Helvetica 24', k='_cvs_')],
-          [sg.Text('', size=(None, 1), font='Helvetica 24', k='_cvs-msg_')],
-          [sg.Button('Andy', use_ttk_buttons=True, font='Courier 16'),
-          sg.Button('Exit', font='Courier 16')
-           ],
-          ]
+layout = [
+    [sg.Text('digital', justification='right'), LEDIndicator('_din_'),
+     sg.Text('analogue', justification='right'), LEDIndicator('_ain_')],
+    [sg.Multiline('128x32 MULTILINE TEXT display', size=(None, 4), font='Helvetica 14', k='_disp_', no_scrollbar=True)],
+    [sg.Slider(range=(1, 500),
+               default_value=222,
+               size=(20, 15),
+               orientation='horizontal',
+               font=('Helvetica', 12)),
+    sg.Slider(range=(1, 500),
+               default_value=222,
+               size=(20, 15),
+               orientation='horizontal',
+               font=('Helvetica', 12))],
+    [sg.Button('Btn1', use_ttk_buttons=True, font='Courier 14'),
+     sg.Button('Btn2', use_ttk_buttons=True, font='Courier 14')
+     ],               
+    [sg.Text('My LED Status Indicators', size=(20, 1))],
+    [sg.Text('cv1', justification='right'), LEDIndicator('_cv1_'),
+     sg.Text('cv2', justification='right'), LEDIndicator('_cv2_'),
+     sg.Text('cv3', justification='right'), LEDIndicator('_cv3_')],
+    [sg.Text('cv4', justification='right'), LEDIndicator('_cv4_'),
+     sg.Text('cv5', justification='right'), LEDIndicator('_cv5_'),
+     sg.Text('cv6',  justification='right'), LEDIndicator('_cv6_')],
+    [sg.Text('', size=(None, 1), font='Helvetica 24', k='_cvs_')],
+    [sg.Text('', size=(None, 1), font='Helvetica 24', k='_cvs-msg_')],
+    [sg.Button('Andy', use_ttk_buttons=True, font='Courier 16'),
+     sg.Button('Exit', use_ttk_buttons=True, font='Courier 16')
+     ],
+]
 
 window = None
 
@@ -53,6 +70,9 @@ async def gui_window_loop():
     global window
     window = sg.Window('EuroPi', layout, default_element_size=(
         20, 1), auto_size_text=False, finalize=True)
+
+    SetLED(window, '_din_', 'red')
+    SetLED(window, '_ain_', 'red')
 
     i = 0
     while True:

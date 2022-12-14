@@ -27,8 +27,8 @@ import time
 }
 """
 import sys
-sys.path.append('/Volumes/SSD/Data/Devel/EuroPi/software/contrib/andy/stubs')
-sys.path.append('/Volumes/SSD/Data/Devel/EuroPi/software/tests/mocks')
+sys.path.append('./software/contrib/andy/stubs')
+sys.path.append('./software/tests/mocks')
 
 from machine import ADC
 from machine import I2C

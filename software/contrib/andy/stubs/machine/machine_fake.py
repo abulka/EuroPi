@@ -44,7 +44,7 @@ from typing import Sequence, ClassVar, Any
 # ANDY moved Pin above ADC to fix forward reference
 
 # ANDY implement override for value methods
-from multipledispatch import dispatch
+from multipledispatch import dispatch  # pip install multipledispatch
 
 class Pin:
     """

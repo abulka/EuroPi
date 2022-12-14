@@ -26,23 +26,56 @@ def SetLED(window, key, color):
     graph.draw_circle((0, 0), 12, fill_color=color, line_color=color)
 
 
+column_to_be_centered2 = [
+        [sg.Text('digital', justification='center'), LEDIndicator('_din_'),
+     sg.Text('analogue', justification='center'), LEDIndicator('_ain_')]]
+
+column_to_be_centered3 = [
+    [sg.Button('Btn1', use_ttk_buttons=True, font='Courier 14'),
+     sg.Button('Btn2', use_ttk_buttons=True, font='Courier 14')
+     ]]
+
+column_to_be_centered = [
+        [sg.Slider(range=(1, 500),
+               default_value=222,
+               size=(20, 15),
+               orientation='horizontal',
+               font=('Helvetica', 12)),
+     sg.Slider(range=(1, 500),
+               default_value=222,
+               size=(20, 15),
+               orientation='horizontal',
+               font=('Helvetica', 12))],
+]
+
 layout = [
+    # [sg.VPush()],
+    # [sg.Push(), sg.Column(column_to_be_centered, element_justification='c'), sg.Push()],
+    # [sg.VPush()],
+    # [sg.VPush()],
+    # [sg.Push(), sg.Column(column_to_be_centered2, element_justification='c'), sg.Push()],
+    # [sg.VPush()],
+    # [sg.VPush()],
+    # [sg.Push(), sg.Column(column_to_be_centered3, element_justification='c'), sg.Push()],
+    # [sg.VPush()],
+
     [sg.Text('digital', justification='right'), LEDIndicator('_din_'),
      sg.Text('analogue', justification='right'), LEDIndicator('_ain_')],
-    [sg.Multiline('128x32 MULTILINE TEXT display', size=(None, 4), font='Helvetica 14', k='_disp_', no_scrollbar=True)],
+    [sg.Multiline('128x32 MULTILINE TEXT display', size=(None, 4),
+                  font='Helvetica 14', k='_disp_', no_scrollbar=True)],
     [sg.Slider(range=(1, 500),
                default_value=222,
                size=(20, 15),
                orientation='horizontal',
                font=('Helvetica', 12)),
-    sg.Slider(range=(1, 500),
+     sg.Slider(range=(1, 500),
                default_value=222,
                size=(20, 15),
                orientation='horizontal',
                font=('Helvetica', 12))],
-    [sg.Button('Btn1', use_ttk_buttons=True, font='Courier 14'),
+    [sg.Button('Btn1', use_ttk_buttons=True, font='Courier 14', pad=(100,0)), 
      sg.Button('Btn2', use_ttk_buttons=True, font='Courier 14')
-     ],               
+     ],
     [sg.Text('My LED Status Indicators', size=(20, 1))],
     [sg.Text('cv1', justification='right'), LEDIndicator('_cv1_'),
      sg.Text('cv2', justification='right'), LEDIndicator('_cv2_'),

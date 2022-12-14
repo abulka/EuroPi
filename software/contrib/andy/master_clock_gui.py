@@ -63,7 +63,7 @@ async def gui_window_loop():
             global mc
             # make a copy since master clock is updating it
             cvs_snapshot = [1 if value != 0 else 0 for value in mc.cvs_snapshot]
-            # window['_cvs_'].update(f'{cvs_snapshot}')
+            window['_cvs_'].update(f'{cvs_snapshot}')
             window['_cvs-msg_'].update(f'{get_cvs_snapshot_msg()}')
             for index, value in enumerate(cvs_snapshot):
                 ref = f'_cv{index+1}_'

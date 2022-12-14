@@ -311,8 +311,8 @@ class MasterClockInner(EuroPiScript):
     async def outputPulse(self, cv):
         from machine import gpio_pin_to_europi_cvout
         # print(f' pulse to {gpio_pin_to_europi_cvout[cv.pin._pin._id]} ✨')
-        display(99)
         cv.voltage(5)
+        display(99)
         await asyncio.sleep_ms(self.pulseWidthMs)
         cv.off()
 
@@ -437,7 +437,7 @@ class MasterClockInner(EuroPiScript):
                 await asyncio.sleep_ms(10)  # allow pin setting tasks created by clockTrigger() to run
                 self.cvs_snapshot = [1 if cv.pin._pin.value() else 0 for cv in cvs]  # for display
                 # the snapshot should correspond to cvs_snapshot_msg
-                print(f'cvs_snapshot: {self.cvs_snapshot}', 'cvs_snapshot_msg: ', get_cvs_snapshot_msg())
+                # print(f'cvs_snapshot: {self.cvs_snapshot}', 'cvs_snapshot_msg: ', get_cvs_snapshot_msg())
 
                 await asyncio.sleep_ms(800)  # ANDY slow down the clock
                 # ANDY this is the original code

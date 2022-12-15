@@ -418,7 +418,7 @@ class MasterClockInner(EuroPiScript):
         
         # ANDY - just for fun display the EuroPi bootsplash
         bootsplash()
-        await asyncio.sleep_ms(2000)
+        await asyncio.sleep_ms(3000)
 
         while True:
             if not self.clockSelectionScreenActive:

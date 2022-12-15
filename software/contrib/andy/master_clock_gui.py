@@ -99,10 +99,11 @@ layout = [
 window = None
 
 
-async def andy_pressed():
+async def andy_pressed(canvas):
     print('andy pressed')
+    canvas.delete('all')
     bootsplash()
-    await asyncio.sleep(1)
+    await asyncio.sleep(2)
     print('andy done')
 
 
@@ -123,7 +124,7 @@ async def gui_window_loop():
         await asyncio.sleep(0.1)
         event, value = window.read(0)
         if event == "Andy":
-            asyncio.create_task(andy_pressed())
+            asyncio.create_task(andy_pressed(canvas))
         if event == "Exit" or event == None:
             break
         if event == "__TIMEOUT__":
@@ -147,11 +148,17 @@ def update_display(canvas):
     if not oled.flush_to_ui:
         return
     for cmd in oled.commands:
+        print('cmd', cmd)
         command = cmd[0]
         params = cmd[1]
         if command == 'text':
             text, x, y, colour = params
-            canvas.create_text((x, y,),  anchor='nw', text=text, font=('Helvetica', 14), fill='black') # must have fill, and anchor='nw' helps position text
+            font_size = 14
+            fill = 'black'
+            if colour == 88:
+                fill = 'green'
+                font_size = 12
+            canvas.create_text((x, y,),  anchor='nw', text=text, font=('Helvetica', font_size), fill=fill) # must have fill, and anchor='nw' helps position text
         elif command == 'fill':
             value = params[0]
             if value == 0:
@@ -244,6 +251,12 @@ def convert_to_xbm(frame_buffer, filename):
     msg = f'#define im_width {frame_buffer.width}\n#define im_height {frame_buffer.height}\nstatic char im_bits[] = {{\n'
     idx = 0
     for byte in frame_buffer.buffer:
+        
+        # change byte endian
+        byte = (byte & 0xF0) >> 4 | (byte & 0x0F) << 4
+        byte = (byte & 0xCC) >> 2 | (byte & 0x33) << 2
+        byte = (byte & 0xAA) >> 1 | (byte & 0x55) << 1
+
         msg += '0x{:02x}'.format(byte) + ','
         idx += 1
         if idx % 8 == 0:

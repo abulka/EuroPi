@@ -1,3 +1,5 @@
+from version import __version__  # ANDY this is the EuroPython version
+
 # ANDY fake display
 
 # class SSD1306_I2C:
@@ -48,6 +50,11 @@ class SSD1306_I2C(object):
 
     def text(self, txt, x, y, colour=None):
         logging.debug('Setting text "%s" at coord %d,%d' % (txt, x, y))
+
+        # Hack to show version number in green along with the bootsplash logo
+        version_str = str(__version__)
+        if txt == version_str:
+            colour = 88  # ANDY just my convention for green, I don't know what the real colour values are
         self.commands.append(('text', (txt, x, y, colour)))
 
     def show(self):

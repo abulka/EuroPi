@@ -26,27 +26,29 @@ def SetLED(window, key, color):
     graph.draw_circle((0, 0), 12, fill_color=color, line_color=color)
 
 
-column_to_be_centered2 = [
-        [sg.Text('digital', justification='center'), LEDIndicator('_din_'),
-     sg.Text('analogue', justification='center'), LEDIndicator('_ain_')]]
+# def drawOnDisplay(window, key='canvas', color='green'):
 
-column_to_be_centered3 = [
-    [sg.Button('Btn1', use_ttk_buttons=True, font='Courier 14'),
-     sg.Button('Btn2', use_ttk_buttons=True, font='Courier 14')
-     ]]
+# column_to_be_centered2 = [
+#         [sg.Text('digital', justification='center'), LEDIndicator('_din_'),
+#      sg.Text('analogue', justification='center'), LEDIndicator('_ain_')]]
 
-column_to_be_centered = [
-        [sg.Slider(range=(1, 500),
-               default_value=222,
-               size=(20, 15),
-               orientation='horizontal',
-               font=('Helvetica', 12)),
-     sg.Slider(range=(1, 500),
-               default_value=222,
-               size=(20, 15),
-               orientation='horizontal',
-               font=('Helvetica', 12))],
-]
+# column_to_be_centered3 = [
+#     [sg.Button('Btn1', use_ttk_buttons=True, font='Courier 14'),
+#      sg.Button('Btn2', use_ttk_buttons=True, font='Courier 14')
+#      ]]
+
+# column_to_be_centered = [
+#         [sg.Slider(range=(1, 500),
+#                default_value=222,
+#                size=(20, 15),
+#                orientation='horizontal',
+#                font=('Helvetica', 12)),
+#      sg.Slider(range=(1, 500),
+#                default_value=222,
+#                size=(20, 15),
+#                orientation='horizontal',
+#                font=('Helvetica', 12))],
+# ]
 
 layout = [
     # [sg.VPush()],
@@ -61,8 +63,10 @@ layout = [
 
     [sg.Text('digital', justification='right'), LEDIndicator('_din_'),
      sg.Text('analogue', justification='right'), LEDIndicator('_ain_')],
-    [sg.Multiline('128x32 MULTILINE TEXT display', size=(None, 4),
-                  font='Helvetica 14', k='_disp_', no_scrollbar=True)],
+    # [sg.Multiline('128x32 MULTILINE TEXT display', size=(None, 4),
+    #               font='Helvetica 14', k='_disp_', no_scrollbar=True)],
+    # [sg.Canvas(size=(128, 32), key='canvas')],
+    [sg.Canvas(size=(128*5, 32*5), background_color='white', key='canvas')],
     [sg.Slider(range=(1, 500),
                default_value=222,
                size=(20, 15),
@@ -106,6 +110,16 @@ async def gui_window_loop():
 
     SetLED(window, '_din_', 'red')
     SetLED(window, '_ain_', 'red')
+    
+    canvas = window['canvas'].TKCanvas
+    cir = canvas.create_oval(50, 50, 100, 100)
+
+    canvas.create_text((0, 0,),  anchor='nw', text='ABCDEFG', font=('Helvetica', 14), fill='DarkKhaki') # must have fill, and anchor='nw' helps position text
+    canvas.create_text(50, 50, text='Hi', fill='black', font=('Helvetica', 24))
+    txt = canvas.create_text(10, 100, text='A wonderful story', anchor='nw', font=('Courier', 50), fill='blue') # font='TkMenuFont'
+    
+    lin = canvas.create_line(10, 10, 200, 50, 90, 150, 50, 80, arrow='last', fill='green')  # must have fill
+    rect = canvas.create_rectangle(120, 10, 200, 50, fill='burlywood1', outline='blue')
 
     i = 0
     while True:
@@ -125,6 +139,13 @@ async def gui_window_loop():
             for index, value in enumerate(cvs_snapshot):
                 ref = f'_cv{index+1}_'
                 SetLED(window, ref, 'red' if value != 0 else 'green')
+
+        # drawOnDisplay(window)
+        # colour = 'red' if i % 2 == 0 else 'green'
+        # canvas.itemconfig(cir, fill=colour)
+        canvas.itemconfig(txt, text=f'ABCDEFG {i}')
+        # canvas.itemconfig(txt, angle=90)
+        i += 1
 
         # print('HA', event, value)
     window.close()

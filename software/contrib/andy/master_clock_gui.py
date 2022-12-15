@@ -5,7 +5,7 @@ import asyncio
 import random
 import PySimpleGUI as sg  # pip install PySimpleGUI
 from master_clock import MasterClockInner
-from europi import cvs, get_cvs_snapshot_msg, oled, bootsplash, b1
+from europi import cvs, get_cvs_snapshot_msg, oled, bootsplash, b1, b2, din
 
 
 sg.theme('SystemDefaultForReal')  # better looking buttons
@@ -28,7 +28,7 @@ def SetLED(window, key, color):
 
 
 layout = [
-    [sg.Text('digital', justification='right'), LEDIndicator('_din_'),
+    [sg.Text('digital', justification='right'), LEDIndicator('_din_'), sg.Button('dinbtn', use_ttk_buttons=True, font='Courier 10'),
      sg.Text('analogue', justification='right'), LEDIndicator('_ain_')],
     [sg.Canvas(size=(128*2, 32*2), background_color='white', key='canvas')],
     [sg.Slider(range=(1, 500),
@@ -87,6 +87,10 @@ async def gui_window_loop():
             asyncio.create_task(andy_pressed(canvas))
         if event == "b1":
             b1._falling_handler()
+        if event == "b2":
+            b2._falling_handler()
+        if event == "dinbtn":
+            din._rising_handler()
         if event == "Exit" or event == None:
             break
         if event == "__TIMEOUT__":

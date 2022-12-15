@@ -138,6 +138,7 @@ class MasterClockInner(EuroPiScript):
         # Starts/Stops the master clock
         @b1.handler_falling
         def StartStop():
+            # self.getClockOption() # ANDY long press simulation - leads to lockup bug
             if ticks_diff(ticks_ms(), b1.last_pressed()) > 500 and ticks_diff(ticks_ms(), b1.last_pressed()) < 4000:
                 self.getClockOption()
             else:
@@ -205,6 +206,7 @@ class MasterClockInner(EuroPiScript):
         oled.text("B2: External", 0, 17, 1)
         oled.show()
         while True:
+            # print('b1.value() = ' + str(b1.value()) + ' b2.value() = ' + str(b2.value())) # ANDY
             if b1.value() == 1:
                 self.externalClockInput = False
                 self.running = False # Need to do this to keep it running because the b1 handler will reverse the value
@@ -214,7 +216,7 @@ class MasterClockInner(EuroPiScript):
                 self.externalClockInput = True
                 self.clockSelectionScreenActive = False
                 break
-            time.sleep(0.05)
+            time.sleep(0.05) # ANDY this prevents the gui from updating or any change to the pins BIG BUG!
         
         self.saveState()
 

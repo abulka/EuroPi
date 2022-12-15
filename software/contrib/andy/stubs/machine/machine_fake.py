@@ -177,9 +177,9 @@ class ADC:
         The return value represents the raw reading taken by the ADC, scaled
         such that the minimum value is 0 and the maximum value is 65535.
         """
-        # generate random number between 0-65535
-        random_number = random.randint(0, 65535)
-        return self._pin.value() + random_number # ANDY
+        # random_number = random.randint(0, 65535)
+        # return self._pin.value() + random_number # ANDY
+        return self._pin.value()
 
 
 class SPI:

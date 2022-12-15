@@ -5,7 +5,7 @@ import asyncio
 import random
 import PySimpleGUI as sg  # pip install PySimpleGUI
 from master_clock import MasterClockInner
-from europi import cvs, get_cvs_snapshot_msg, oled, bootsplash, b1, b2, din
+from europi import cvs, get_cvs_snapshot_msg, oled, bootsplash, b1, b2, din, k1, k2
 
 
 sg.theme('SystemDefaultForReal')  # better looking buttons
@@ -32,11 +32,13 @@ layout = [
      sg.Text('analogue', justification='right'), LEDIndicator('_ain_')],
     [sg.Canvas(size=(128*2, 32*2), background_color='white', key='canvas')],
     [sg.Slider(range=(1, 500),
+               k='k1',
                default_value=222,
                size=(20, 15),
                orientation='horizontal',
                font=('Helvetica', 12)),
      sg.Slider(range=(1, 500),
+               k='k1',
                default_value=222,
                size=(20, 15),
                orientation='horizontal',
@@ -78,11 +80,18 @@ async def gui_window_loop():
     SetLED(window, '_ain_', 'red')
 
     canvas = window['canvas'].TKCanvas
+    values_last = { 'k1': 0, 'k2': 0 }
 
     i = 0
     while True:
         await asyncio.sleep(0.1)
-        event, value = window.read(0)
+        event, values = window.read(0)
+
+        if int(values['k1'] != values_last['k1']):
+            values_last['k1'] = values['k1']
+            print('k1', int(values['k1']))
+            k1.pin._pin._value = int(values['k1'])
+
         if event == "Andy":
             asyncio.create_task(andy_pressed(canvas))
         if event == "b1":
@@ -91,6 +100,10 @@ async def gui_window_loop():
             b2._falling_handler()
         if event == "dinbtn":
             din._rising_handler()
+        # if event == "k1":
+        #     print('k1', values)
+        # if event == "k2":
+        #     print('k2', values)
         if event == "Exit" or event == None:
             break
         if event == "__TIMEOUT__":
@@ -99,9 +112,9 @@ async def gui_window_loop():
                             0 else 0 for value in mc.cvs_snapshot]
             window['_cvs_'].update(f'{cvs_snapshot}')
             window['_cvs-msg_'].update(f'{get_cvs_snapshot_msg()}')
-            for index, value in enumerate(cvs_snapshot):
+            for index, values in enumerate(cvs_snapshot):
                 ref = f'_cv{index+1}_'
-                SetLED(window, ref, 'red' if value != 0 else 'green')
+                SetLED(window, ref, 'red' if values != 0 else 'green')
 
         update_display(canvas)
         i += 1

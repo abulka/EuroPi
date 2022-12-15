@@ -30,7 +30,8 @@ class Logging():
         pass
 
     def debug(self, *args):
-        print("debug: ", args)
+        # print("debug: ", args)
+        pass
 
 logging = Logging()
 
@@ -42,12 +43,12 @@ class SSD1306_I2C(object):
         self.addr = addr
 
         # ANDY
-        self.text_commands = [] # tuple of text, x, y, colour
+        self.commands = [] # tuple of (cmd, params)
         self.flush_to_ui = False
 
     def text(self, txt, x, y, colour=None):
         logging.debug('Setting text "%s" at coord %d,%d' % (txt, x, y))
-        self.text_commands.append((txt, x, y, colour))
+        self.commands.append(('text', (txt, x, y, colour)))
 
     def show(self):
         logging.debug('Showing on lcd')
@@ -55,6 +56,7 @@ class SSD1306_I2C(object):
 
     def fill(self, value):
         logging.debug('Fill with %s' % value)
+        self.commands.append(('fill', (value,)))
 
     def invert(self, invert):
         logging.debug('Inverting pixels')

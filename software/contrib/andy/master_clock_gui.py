@@ -147,11 +147,19 @@ async def gui_window_loop():
 def update_display(canvas):
     if not oled.flush_to_ui:
         return
-    canvas.delete('all')
-    for txt_cmd in oled.text_commands:
-        text, x, y, colour = txt_cmd
-        canvas.create_text((x, y,),  anchor='nw', text=text, font=('Helvetica', 14), fill='black') # must have fill, and anchor='nw' helps position text
-    oled.text_commands = []
+    for cmd in oled.commands:
+        command = cmd[0]
+        params = cmd[1]
+        if command == 'text':
+            text, x, y, colour = params
+            canvas.create_text((x, y,),  anchor='nw', text=text, font=('Helvetica', 14), fill='black') # must have fill, and anchor='nw' helps position text
+        elif command == 'fill':
+            value = params[0]
+            if value == 0:
+                canvas.delete('all')
+        else:
+            print('unknown command', command)
+    oled.commands = []
     oled.flush_to_ui = False
 
 def demo(canvas):

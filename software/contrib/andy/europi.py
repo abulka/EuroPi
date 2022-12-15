@@ -462,6 +462,7 @@ class Display(SSD1306_I2C):
         #             "EuroPi Hardware Error:\nMake sure the OLED display is connected correctly"
         #         )
         # super().__init__(self.width, self.height, i2c)
+        super().__init__(self.width, self.height)
 
     def centre_text(self, text):
         """Split the provided text across 3 lines of display."""

@@ -22,3 +22,5 @@ class SSD1306_I2C:
 
     def blit(self, *args):
         pass
+
+print('imported ssd1306.py mock from software/tests/mocks')

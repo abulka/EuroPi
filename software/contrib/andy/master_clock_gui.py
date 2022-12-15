@@ -5,7 +5,7 @@ import asyncio
 import random
 import PySimpleGUI as sg  # pip install PySimpleGUI
 from master_clock import MasterClockInner
-from europi import cvs, get_cvs_snapshot_msg
+from europi import cvs, get_cvs_snapshot_msg, oled
 
 sg.theme('SystemDefaultForReal')  # better looking buttons
 
@@ -112,14 +112,7 @@ async def gui_window_loop():
     SetLED(window, '_ain_', 'red')
     
     canvas = window['canvas'].TKCanvas
-    cir = canvas.create_oval(50, 50, 100, 100)
-
-    canvas.create_text((0, 0,),  anchor='nw', text='ABCDEFG', font=('Helvetica', 14), fill='DarkKhaki') # must have fill, and anchor='nw' helps position text
-    canvas.create_text(50, 50, text='Hi', fill='black', font=('Helvetica', 24))
-    txt = canvas.create_text(10, 100, text='A wonderful story', anchor='nw', font=('Courier', 50), fill='blue') # font='TkMenuFont'
-    
-    lin = canvas.create_line(10, 10, 200, 50, 90, 150, 50, 80, arrow='last', fill='green')  # must have fill
-    rect = canvas.create_rectangle(120, 10, 200, 50, fill='burlywood1', outline='blue')
+    txt = demo(canvas)
 
     i = 0
     while True:
@@ -143,12 +136,24 @@ async def gui_window_loop():
         # drawOnDisplay(window)
         # colour = 'red' if i % 2 == 0 else 'green'
         # canvas.itemconfig(cir, fill=colour)
-        canvas.itemconfig(txt, text=f'ABCDEFG {i}')
+        # canvas.itemconfig(txt, text=f'ABCDEFG {i}')
+        canvas.itemconfig(txt, text=f'ABCDEFG {oled.latest_text} {i}')
         # canvas.itemconfig(txt, angle=90)
         i += 1
 
         # print('HA', event, value)
     window.close()
+
+def demo(canvas):
+    cir = canvas.create_oval(50, 50, 100, 100)
+
+    canvas.create_text((0, 0,),  anchor='nw', text=oled.latest_text, font=('Helvetica', 14), fill='DarkKhaki') # must have fill, and anchor='nw' helps position text
+    canvas.create_text(50, 50, text='Hi', fill='black', font=('Helvetica', 24))
+    txt = canvas.create_text(10, 100, text=oled.latest_text, anchor='nw', font=('Courier', 50), fill='blue') # font='TkMenuFont'
+    
+    lin = canvas.create_line(10, 10, 200, 50, 90, 150, 50, 80, arrow='last', fill='green')  # must have fill
+    rect = canvas.create_rectangle(120, 10, 200, 50, fill='burlywood1', outline='blue')
+    return txt
 
 
 async def auto_close_no_window():

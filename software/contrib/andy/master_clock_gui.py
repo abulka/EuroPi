@@ -5,7 +5,7 @@ import asyncio
 import random
 import PySimpleGUI as sg  # pip install PySimpleGUI
 from master_clock import MasterClockInner
-from europi import cvs, get_cvs_snapshot_msg, oled, bootsplash
+from europi import cvs, get_cvs_snapshot_msg, oled, bootsplash, b1
 
 
 sg.theme('SystemDefaultForReal')  # better looking buttons
@@ -41,8 +41,8 @@ layout = [
                size=(20, 15),
                orientation='horizontal',
                font=('Helvetica', 12))],
-    [sg.Button('Btn1', use_ttk_buttons=True, font='Courier 14', pad=(100, 0)),
-     sg.Button('Btn2', use_ttk_buttons=True, font='Courier 14')
+    [sg.Button('b1', use_ttk_buttons=True, font='Courier 14', pad=(100, 0)),
+     sg.Button('b2', use_ttk_buttons=True, font='Courier 14')
      ],
     [sg.Text('My LED Status Indicators', size=(20, 1))],
     [sg.Text('cv1', justification='right'), LEDIndicator('_cv1_'),
@@ -85,10 +85,11 @@ async def gui_window_loop():
         event, value = window.read(0)
         if event == "Andy":
             asyncio.create_task(andy_pressed(canvas))
+        if event == "b1":
+            b1._falling_handler()
         if event == "Exit" or event == None:
             break
         if event == "__TIMEOUT__":
-            global mc
             # make a copy since master clock is updating it
             cvs_snapshot = [1 if value !=
                             0 else 0 for value in mc.cvs_snapshot]

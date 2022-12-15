@@ -65,8 +65,7 @@ layout = [
      sg.Text('analogue', justification='right'), LEDIndicator('_ain_')],
     # [sg.Multiline('128x32 MULTILINE TEXT display', size=(None, 4),
     #               font='Helvetica 14', k='_disp_', no_scrollbar=True)],
-    # [sg.Canvas(size=(128, 32), key='canvas')],
-    [sg.Canvas(size=(128*5, 32*5), background_color='white', key='canvas')],
+    [sg.Canvas(size=(128*2, 32*2), background_color='white', key='canvas')],
     [sg.Slider(range=(1, 500),
                default_value=222,
                size=(20, 15),
@@ -112,7 +111,7 @@ async def gui_window_loop():
     SetLED(window, '_ain_', 'red')
     
     canvas = window['canvas'].TKCanvas
-    txt = demo(canvas)
+    # txt = demo(canvas)
 
     i = 0
     while True:
@@ -137,12 +136,23 @@ async def gui_window_loop():
         # colour = 'red' if i % 2 == 0 else 'green'
         # canvas.itemconfig(cir, fill=colour)
         # canvas.itemconfig(txt, text=f'ABCDEFG {i}')
-        canvas.itemconfig(txt, text=f'ABCDEFG {oled.latest_text} {i}')
+        # canvas.itemconfig(txt, text=f'ABCDEFG {oled.latest_text} {i}')
         # canvas.itemconfig(txt, angle=90)
+        update_display(canvas)
         i += 1
 
         # print('HA', event, value)
     window.close()
+
+def update_display(canvas):
+    if not oled.flush_to_ui:
+        return
+    canvas.delete('all')
+    for txt_cmd in oled.text_commands:
+        text, x, y, colour = txt_cmd
+        canvas.create_text((x, y,),  anchor='nw', text=text, font=('Helvetica', 14), fill='black') # must have fill, and anchor='nw' helps position text
+    oled.text_commands = []
+    oled.flush_to_ui = False
 
 def demo(canvas):
     cir = canvas.create_oval(50, 50, 100, 100)

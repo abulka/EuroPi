@@ -41,15 +41,17 @@ class SSD1306_I2C(object):
         self.i2c = i2c
         self.addr = addr
 
-        self.latest_text = 'hi from SSD1306_I2C'
-        print('init SSD1306_I2C')
+        # ANDY
+        self.text_commands = [] # tuple of text, x, y, colour
+        self.flush_to_ui = False
 
     def text(self, txt, x, y, colour=None):
         logging.debug('Setting text "%s" at coord %d,%d' % (txt, x, y))
-        self.latest_text = txt
+        self.text_commands.append((txt, x, y, colour))
 
     def show(self):
         logging.debug('Showing on lcd')
+        self.flush_to_ui = True
 
     def fill(self, value):
         logging.debug('Fill with %s' % value)

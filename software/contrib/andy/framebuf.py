@@ -20,7 +20,7 @@ class FrameBuffer:
     def __init__(self, buffer, width, height, format, stride=None, /):
         if stride is None:
             stride = width
-        print(f'FrameBuffer', 'buffer', buffer, 'width', width, 'height', height, 'format', format, 'stride', stride)
+        # print(f'FrameBuffer', 'buffer', buffer, 'width', width, 'height', height, 'format', format, 'stride', stride)
         self.buffer = buffer
         self.width = width
         self.height = height

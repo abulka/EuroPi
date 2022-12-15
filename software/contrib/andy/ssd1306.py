@@ -78,5 +78,6 @@ class SSD1306_I2C(object):
 
     def blit(self, frame_buffer, x, y):
         logging.debug('blit')
+        self.commands.append(('blit', (frame_buffer, x, y)))
 
 print('imported ssd1306.py from software/contrib/andy')

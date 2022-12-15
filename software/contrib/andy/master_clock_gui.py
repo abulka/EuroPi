@@ -115,7 +115,7 @@ async def gui_window_loop():
     
     canvas = window['canvas'].TKCanvas
     # txt = demo(canvas)
-    convert_to_xbm()
+    # convert_to_xbm()
 
     i = 0
     while True:
@@ -136,65 +136,7 @@ async def gui_window_loop():
                 ref = f'_cv{index+1}_'
                 SetLED(window, ref, 'red' if value != 0 else 'green')
 
-        # drawOnDisplay(window)
-        # colour = 'red' if i % 2 == 0 else 'green'
-        # canvas.itemconfig(cir, fill=colour)
-        # canvas.itemconfig(txt, text=f'ABCDEFG {i}')
-        # canvas.itemconfig(txt, text=f'ABCDEFG {oled.latest_text} {i}')
-        # canvas.itemconfig(txt, angle=90)
         update_display(canvas)
-        # canvas.create_bitmap(130, 20, bitmap='questhead', foreground='red')  #  🎉 https://anzeljg.github.io/rin2/book2/2405/docs/tkinter/bitmaps.html
-        # display custom bitmap from bytearray
-
-        # tk.BitmapImage(data=...)
-        # canvas.create_bitmap(130, 20, bitmap='@' + bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]), foreground='red') # CRASH
-        # canvas.create_bitmap(130, 20, bitmap='@/Volumes/SSD/Data/Devel/EuroPi/software/contrib/andy/Untitled-2.xbm', foreground='red') # WORKS!
-        # canvas.create_bitmap(130, 20, bitmap='@software/contrib/andy/Untitled-2.xbm', foreground='red') # WORKS! 🎉
-        # canvas.create_image(130, 20, image=BITMAP, foreground='red') # CRASH
-
-        # im1 = Image.open('/Volumes/SSD/Data/Devel/EuroPi/software/contrib/andy/Untitled-1.png').convert("1") # 🎉
-        # size = (im1.width // 4, im1.height // 4)
-        # im1 = ImageTk.BitmapImage(im1.resize(size))
-        # canvas.create_image(130, 20, image=im1, foreground='red') # CRASH
-        # canvas.create_bitmap(130, 20, bitmap=im1, foreground='red') # CRASH
-        # save as xbm
-        # XbmImageFile(im1).save('/Volumes/SSD/Data/Devel/EuroPi/software/contrib/andy/Untitled-3.xbm')
-        # save as png
-        # im1.save('/Volumes/SSD/Data/Devel/EuroPi/software/contrib/andy/Untitled-3.png', format='PNG') # WORKS
-        
-        # im1.save('/Volumes/SSD/Data/Devel/EuroPi/software/contrib/andy/Untitled-3.xbm', format='XBM') # WORKS  🎉
-        # canvas.create_bitmap(130, 20, bitmap='@software/contrib/andy/Untitled-3.xbm', foreground='red') # WORKS!  🎉
-
-        # write BITMAP to file
-        BITMAP = """
-        #define im_width 32
-        #define im_height 32
-        static char im_bits[] = {
-        0xaf,0x6d,0xeb,0xd6,0x55,0xdb,0xb6,0x2f,
-        0xaf,0xaa,0x6a,0x6d,0x55,0x7b,0xd7,0x1b,
-        0xad,0xd6,0xb5,0xae,0xad,0x55,0x6f,0x05,
-        0xad,0xba,0xab,0xd6,0xaa,0xd5,0x5f,0x93,
-        0xad,0x76,0x7d,0x67,0x5a,0xd5,0xd7,0xa3,
-        0xad,0xbd,0xfe,0xea,0x5a,0xab,0x69,0xb3,
-        0xad,0x55,0xde,0xd8,0x2e,0x2b,0xb5,0x6a,
-        0x69,0x4b,0x3f,0xb4,0x9e,0x92,0xb5,0xed,
-        0xd5,0xca,0x9c,0xb4,0x5a,0xa1,0x2a,0x6d,
-        0xad,0x6c,0x5f,0xda,0x2c,0x91,0xbb,0xf6,
-        0xad,0xaa,0x96,0xaa,0x5a,0xca,0x9d,0xfe,
-        0x2c,0xa5,0x2a,0xd3,0x9a,0x8a,0x4f,0xfd,
-        0x2c,0x25,0x4a,0x6b,0x4d,0x45,0x9f,0xba,
-        0x1a,0xaa,0x7a,0xb5,0xaa,0x44,0x6b,0x5b,
-        0x1a,0x55,0xfd,0x5e,0x4e,0xa2,0x6b,0x59,
-        0x9a,0xa4,0xde,0x4a,0x4a,0xd2,0xf5,0xaa
-        };
-        """        
-        with open('/Volumes/SSD/Data/Devel/EuroPi/software/contrib/andy/Untitled-4.xbm', 'w') as f:
-            f.write(BITMAP)
-        # canvas.create_bitmap(130, 20, bitmap='@software/contrib/andy/Untitled-4.xbm', foreground='red') # WORKS!  🎉
-        canvas.create_bitmap(130, 20, bitmap='@software/contrib/andy/logo.xbm', foreground='red') # WORKS!  🎉
-
-        # canvas.create_bitmap(130, 20, bitmap='@/Volumes/SSD/Data/Devel/EuroPi/software/contrib/andy/Untitled-3.xbm', foreground='red') # CRASH
-
         i += 1
 
         # print('HA', event, value)
@@ -213,6 +155,11 @@ def update_display(canvas):
             value = params[0]
             if value == 0:
                 canvas.delete('all')
+        elif command == 'blit':
+            frame_buffer, x, y = params
+            filename = 'software/contrib/andy/logo.xbm'
+            convert_to_xbm(frame_buffer, filename)
+            canvas.create_bitmap(130, 20, bitmap=f'@{filename}', foreground='red') # WORKS!  🎉
         else:
             print('unknown command', command)
     oled.commands = []
@@ -229,20 +176,81 @@ def demo(canvas):
     rect = canvas.create_rectangle(120, 10, 200, 50, fill='burlywood1', outline='blue')
     return txt
 
-def convert_to_xbm(byte_array=None):
-    logo = b'\x00\x00\x00\x01\xf0\x00\x00\x00\x00\x00\x00\x00\x03\x00\x00\x00\x00\x00\x00\x02\x08\x00\x00\x00\x00\x00\x00\x00\x03\x00\x00\x00\x00\x00\x00\x04\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x03\xc4\x04\x00\x18\x00\x00\x00p\x07\x00\x00\x00\x00\x00\x00\x0c$\x02\x00~\x0c\x18\xb9\x8c8\xc3\x00\x00\x00\x00\x00\x10\x14\x01\x00\xc3\x0c\x18\xc3\x060c\x00\x00\x00\x00\x00\x10\x0b\xc0\x80\x81\x8c\x18\xc2\x020#\x00\x00\x00\x00\x00 \x04\x00\x81\x81\x8c\x18\x82\x02 #\x00\x00\x00\x00\x00A\x8a|\x81\xff\x0c\x18\x82\x02 #\x00\x00\x00\x00\x00FJC\xc1\x80\x0c\x18\x82\x02 #\x00\x00\x00\x00\x00H\x898\x00\x80\x0c\x18\x83\x060c\x00\x00\x00\x00\x00S\x08\x87\x00\xc3\x060\x81\x8c8\xc3\x00\x00\x00\x00\x00d\x08\x00\xc0<\x01\xc0\x80p7\x03\x00\x00\x00\x00\x00X\x08p \x00\x00\x00\x00\x000\x00\x00\x00\x00\x00\x00#\x88H \x00\x00\x00\x00\x000\x00\x00\x00\x00\x00\x00L\xb8& \x00\x00\x00\x00\x000\x00\x00\x00\x00\x00\x00\x91P\x11 \x00\x00\x00\x00\x000\x00\x00\x00\x00\x00\x00\xa6\x91\x08\xa0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xc9\x12\x84`\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x12\x12C\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00$\x11 \x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00H\x0c\x90\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00@\x12\x88\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00 \x12F\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x10A\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10  \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08  \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04@@\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xc6\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x008\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+def demo2(canvas):
+    # drawOnDisplay(window)
+    # colour = 'red' if i % 2 == 0 else 'green'
+    # canvas.itemconfig(cir, fill=colour)
+    # canvas.itemconfig(txt, text=f'ABCDEFG {i}')
+    # canvas.itemconfig(txt, text=f'ABCDEFG {oled.latest_text} {i}')
+    # canvas.itemconfig(txt, angle=90)
+    # canvas.create_bitmap(130, 20, bitmap='questhead', foreground='red')  #  🎉 https://anzeljg.github.io/rin2/book2/2405/docs/tkinter/bitmaps.html
+    # display custom bitmap from bytearray
+
+    # tk.BitmapImage(data=...)
+    # canvas.create_bitmap(130, 20, bitmap='@' + bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]), foreground='red') # CRASH
+    # canvas.create_bitmap(130, 20, bitmap='@/Volumes/SSD/Data/Devel/EuroPi/software/contrib/andy/Untitled-2.xbm', foreground='red') # WORKS!
+    # canvas.create_bitmap(130, 20, bitmap='@software/contrib/andy/Untitled-2.xbm', foreground='red') # WORKS! 🎉
+    # canvas.create_image(130, 20, image=BITMAP, foreground='red') # CRASH
+
+    # im1 = Image.open('/Volumes/SSD/Data/Devel/EuroPi/software/contrib/andy/Untitled-1.png').convert("1") # 🎉
+    # size = (im1.width // 4, im1.height // 4)
+    # im1 = ImageTk.BitmapImage(im1.resize(size))
+    # canvas.create_image(130, 20, image=im1, foreground='red') # CRASH
+    # canvas.create_bitmap(130, 20, bitmap=im1, foreground='red') # CRASH
+    # save as xbm
+    # XbmImageFile(im1).save('/Volumes/SSD/Data/Devel/EuroPi/software/contrib/andy/Untitled-3.xbm')
+    # save as png
+    # im1.save('/Volumes/SSD/Data/Devel/EuroPi/software/contrib/andy/Untitled-3.png', format='PNG') # WORKS
+    
+    # im1.save('/Volumes/SSD/Data/Devel/EuroPi/software/contrib/andy/Untitled-3.xbm', format='XBM') # WORKS  🎉
+    # canvas.create_bitmap(130, 20, bitmap='@software/contrib/andy/Untitled-3.xbm', foreground='red') # WORKS!  🎉
+
+    # write BITMAP to file
+    BITMAP = """
+    #define im_width 32
+    #define im_height 32
+    static char im_bits[] = {
+    0xaf,0x6d,0xeb,0xd6,0x55,0xdb,0xb6,0x2f,
+    0xaf,0xaa,0x6a,0x6d,0x55,0x7b,0xd7,0x1b,
+    0xad,0xd6,0xb5,0xae,0xad,0x55,0x6f,0x05,
+    0xad,0xba,0xab,0xd6,0xaa,0xd5,0x5f,0x93,
+    0xad,0x76,0x7d,0x67,0x5a,0xd5,0xd7,0xa3,
+    0xad,0xbd,0xfe,0xea,0x5a,0xab,0x69,0xb3,
+    0xad,0x55,0xde,0xd8,0x2e,0x2b,0xb5,0x6a,
+    0x69,0x4b,0x3f,0xb4,0x9e,0x92,0xb5,0xed,
+    0xd5,0xca,0x9c,0xb4,0x5a,0xa1,0x2a,0x6d,
+    0xad,0x6c,0x5f,0xda,0x2c,0x91,0xbb,0xf6,
+    0xad,0xaa,0x96,0xaa,0x5a,0xca,0x9d,0xfe,
+    0x2c,0xa5,0x2a,0xd3,0x9a,0x8a,0x4f,0xfd,
+    0x2c,0x25,0x4a,0x6b,0x4d,0x45,0x9f,0xba,
+    0x1a,0xaa,0x7a,0xb5,0xaa,0x44,0x6b,0x5b,
+    0x1a,0x55,0xfd,0x5e,0x4e,0xa2,0x6b,0x59,
+    0x9a,0xa4,0xde,0x4a,0x4a,0xd2,0xf5,0xaa
+    };
+    """        
+    with open('/Volumes/SSD/Data/Devel/EuroPi/software/contrib/andy/Untitled-4.xbm', 'w') as f:
+        f.write(BITMAP)
+    # canvas.create_bitmap(130, 20, bitmap='@software/contrib/andy/Untitled-4.xbm', foreground='red') # WORKS!  🎉
+    canvas.create_bitmap(130, 20, bitmap='@software/contrib/andy/logo.xbm', foreground='red') # WORKS!  🎉
+
+    # canvas.create_bitmap(130, 20, bitmap='@/Volumes/SSD/Data/Devel/EuroPi/software/contrib/andy/Untitled-3.xbm', foreground='red') # CRASH
+
+    # img2 = sg.tkinter.BitmapImage(data=BITMAP) # works
+    # canvas.create_bitmap(130, 20, bitmap=img2, foreground='red') # CRASH
+    # canvas.create_image(130, 20, image=img2, foreground='red') # CRASH
+
+def convert_to_xbm(frame_buffer, filename):
+    # frame_buffer = b'\x00\x00\x00\x01\xf0\x00\x00\x00\x00\x00\x00\x00\x03\x00\x00\x00\x00\x00\x00\x02\x08\x00\x00\x00\x00\x00\x00\x00\x03\x00\x00\x00\x00\x00\x00\x04\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x03\xc4\x04\x00\x18\x00\x00\x00p\x07\x00\x00\x00\x00\x00\x00\x0c$\x02\x00~\x0c\x18\xb9\x8c8\xc3\x00\x00\x00\x00\x00\x10\x14\x01\x00\xc3\x0c\x18\xc3\x060c\x00\x00\x00\x00\x00\x10\x0b\xc0\x80\x81\x8c\x18\xc2\x020#\x00\x00\x00\x00\x00 \x04\x00\x81\x81\x8c\x18\x82\x02 #\x00\x00\x00\x00\x00A\x8a|\x81\xff\x0c\x18\x82\x02 #\x00\x00\x00\x00\x00FJC\xc1\x80\x0c\x18\x82\x02 #\x00\x00\x00\x00\x00H\x898\x00\x80\x0c\x18\x83\x060c\x00\x00\x00\x00\x00S\x08\x87\x00\xc3\x060\x81\x8c8\xc3\x00\x00\x00\x00\x00d\x08\x00\xc0<\x01\xc0\x80p7\x03\x00\x00\x00\x00\x00X\x08p \x00\x00\x00\x00\x000\x00\x00\x00\x00\x00\x00#\x88H \x00\x00\x00\x00\x000\x00\x00\x00\x00\x00\x00L\xb8& \x00\x00\x00\x00\x000\x00\x00\x00\x00\x00\x00\x91P\x11 \x00\x00\x00\x00\x000\x00\x00\x00\x00\x00\x00\xa6\x91\x08\xa0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xc9\x12\x84`\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x12\x12C\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00$\x11 \x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00H\x0c\x90\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00@\x12\x88\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00 \x12F\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x10A\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10  \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08  \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04@@\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xc6\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x008\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
     msg = '#define im_width 128\n#define im_height 32\nstatic char im_bits[] = {\n'
     idx = 0
-    for byte in logo:
-        # print byte in hex format
-        # print('0x{:02x}'.format(byte), end=' ')
+    for byte in frame_buffer.buffer:
         msg += '0x{:02x}'.format(byte) + ','
         idx += 1
         if idx % 8 == 0:
             msg += '\n'
     msg += '};'
     # write to file
-    with open('software/contrib/andy/logo.xbm', 'w') as f:
+    with open(filename, 'w') as f:
         f.write(msg)
 
 async def auto_close_no_window():

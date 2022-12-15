@@ -79,8 +79,8 @@ async def gui_window_loop():
     SetLED(window, '_din_', 'red')
     SetLED(window, '_ain_', 'red')
 
-    # b1.pin.value(1) # reverse pin logic high/low/pull stuff
-    # b2.pin.value(1) # reverse pin logic high/low/pull stuff
+    b1.pin.value(1) # reverse pin logic high/low/pull stuff
+    b2.pin.value(1) # reverse pin logic high/low/pull stuff
 
     canvas = window['canvas'].TKCanvas
     values_last = { 'k1': 0, 'k2': 0 }
@@ -90,10 +90,11 @@ async def gui_window_loop():
         await asyncio.sleep(0.1)
         event, values = window.read(0)
 
-        # if int(values['k1'] != values_last['k1']):
-        #     values_last['k1'] = values['k1']
-        #     print('k1', int(values['k1']))
-        #     k1.pin._pin._value = int(values['k1'])
+        # this is how you intercept slider changes it seems
+        if int(values['k1'] != values_last['k1']):
+            values_last['k1'] = values['k1']
+            print('k1', int(values['k1']))
+            k1.pin._pin._value = int(values['k1'])
 
         if event == "Andy":
             asyncio.create_task(andy_pressed(canvas))
@@ -103,10 +104,6 @@ async def gui_window_loop():
             b2._falling_handler()
         if event == "dinbtn":
             din._rising_handler()
-        # if event == "k1":
-        #     print('k1', values)
-        # if event == "k2":
-        #     print('k2', values)
         if event == "Exit" or event == None:
             break
         if event == "__TIMEOUT__":

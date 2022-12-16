@@ -145,6 +145,7 @@ class MasterClockInner(EuroPiScript):
             else:
                 print('b1 short press', ticks_diff(ticks_ms(), b1.last_pressed()))
                 self.running = not self.running
+                print('running', self.running)
 
 
         # Cycle screen and toggle config mode
@@ -425,7 +426,7 @@ class MasterClockInner(EuroPiScript):
         
         # ANDY - just for fun display the EuroPi bootsplash
         bootsplash()
-        await asyncio.sleep_ms(3000)
+        await asyncio.sleep_ms(1500)
 
         while True:
             if not self.clockSelectionScreenActive:

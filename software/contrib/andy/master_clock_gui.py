@@ -76,8 +76,8 @@ async def gui_window_loop():
     window = sg.Window('EuroPi', layout, default_element_size=(
         20, 1), auto_size_text=False, finalize=True)
 
-    SetLED(window, '_din_', 'red')
-    SetLED(window, '_ain_', 'red')
+    SetLED(window, '_din_', 'green')
+    SetLED(window, '_ain_', 'green')
 
     b1.pin.value(1) # reverse pin logic high/low/pull stuff
     b2.pin.value(1) # reverse pin logic high/low/pull stuff

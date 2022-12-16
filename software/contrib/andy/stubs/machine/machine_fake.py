@@ -145,7 +145,6 @@ class Pin:
             is set high, otherwise it is set low.
         """
         self._value = value
-        # print(f"  Pin.value({value})")
 
 
 class ADC:
@@ -177,8 +176,6 @@ class ADC:
         The return value represents the raw reading taken by the ADC, scaled
         such that the minimum value is 0 and the maximum value is 65535.
         """
-        # random_number = random.randint(0, 65535)
-        # return self._pin.value() + random_number # ANDY
         return self._pin.value()
 
 

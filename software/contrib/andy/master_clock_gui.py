@@ -31,14 +31,14 @@ layout = [
     [sg.Text('digital', justification='right'), LEDIndicator('_din_'), sg.Button('dinbtn', use_ttk_buttons=True, font='Courier 10'),
      sg.Text('analogue', justification='right'), LEDIndicator('_ain_')],
     [sg.Canvas(size=(128*2, 32*2), background_color='white', key='canvas')],
-    [sg.Slider(range=(1, 500),
+    [sg.Slider(range=(1, 65535),
                k='k1',
                default_value=222,
                size=(20, 15),
                orientation='horizontal',
                font=('Helvetica', 12)),
-     sg.Slider(range=(1, 500),
-               k='k1',
+     sg.Slider(range=(1, 65535),
+               k='k2',
                default_value=222,
                size=(20, 15),
                orientation='horizontal',
@@ -93,8 +93,10 @@ async def gui_window_loop():
         # this is how you intercept slider changes it seems
         if int(values['k1'] != values_last['k1']):
             values_last['k1'] = values['k1']
-            print('k1', int(values['k1']))
             k1.pin._pin._value = int(values['k1'])
+        if int(values['k2'] != values_last['k2']):
+            values_last['k2'] = values['k2']
+            k2.pin._pin._value = int(values['k2'])
 
         if event == "Andy":
             asyncio.create_task(andy_pressed(canvas))

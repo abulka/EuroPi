@@ -276,6 +276,7 @@ class Knob(AnalogueReader):
 
     def read_position(self, steps=100, samples=None):
         """Returns the position as a value between zero and provided integer."""
+        print('read_position', self.range(steps, samples))
         return self.range(steps, samples)
 
 

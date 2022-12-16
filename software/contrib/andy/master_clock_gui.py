@@ -117,11 +117,16 @@ async def gui_window_loop():
         if event == "Exit" or event == None:
             break
         if event == "__TIMEOUT__":
+            # Update LEDS - note the display is running at a different async loop
+            # speed than the EuroPi clock, so we can't turn off leds with the 
+            # same timing as the EuroPi clock. So unfortunately 
+            # some leds stay on permanently e.g. cv1.
+
             # make a copy since master clock is updating it
             cvs_snapshot = [1 if value !=
                             0 else 0 for value in mc.cvs_snapshot]
-            window['_cvs_'].update(f'{cvs_snapshot}')
-            window['_cvs-msg_'].update(f'{get_cvs_snapshot_msg()}')
+            # window['_cvs_'].update(f'{cvs_snapshot}')
+            # window['_cvs-msg_'].update(f'{get_cvs_snapshot_msg()}')
             for index, values in enumerate(cvs_snapshot):
                 ref = f'_cv{index+1}_'
                 SetLED(window, ref, 'red' if values != 0 else 'green')

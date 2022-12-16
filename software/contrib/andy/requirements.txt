@@ -1,4 +1,4 @@
 multipledispatch
 PySimpleGUI
-"kivy[base]"
+kivy[base]
 kivy_examples

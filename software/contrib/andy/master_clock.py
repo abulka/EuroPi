@@ -142,6 +142,7 @@ class MasterClockInner(EuroPiScript):
             if ticks_diff(ticks_ms(), b1.last_pressed()) > 500 and ticks_diff(ticks_ms(), b1.last_pressed()) < 4000:
                 print('b1 long press', ticks_diff(ticks_ms(), b1.last_pressed()), '- 💣 leads to lockup bug cos its not async')
                 # self.getClockOption() # ANDY
+                asyncio.create_task(self.getClockOptionAndy())
             else:
                 print('b1 short press', ticks_diff(ticks_ms(), b1.last_pressed()))
                 self.running = not self.running
@@ -226,6 +227,30 @@ class MasterClockInner(EuroPiScript):
         
         self.saveState()
 
+    async def getClockOptionAndy(self):
+        self.clockSelectionScreenActive = True
+        oled.fill(0)
+        oled.text("Clock Source:", 0, 0, 1)
+        oled.text("B1: Internal", 0, 9, 1)
+        oled.text("B2: External", 0, 17, 1)
+        oled.show()
+        # await asyncio.sleep(3)
+        # self.clockSelectionScreenActive = False
+        while True:
+            # print('b1.value() = ' + str(b1.value()) + ' b2.value() = ' + str(b2.value())) # ANDY
+            if b1.value() == 1:
+                print('chose b1')
+                self.externalClockInput = False
+                self.running = False # Need to do this to keep it running because the b1 handler will reverse the value
+                self.clockSelectionScreenActive = False
+                break
+            elif b2.value() == 1:
+                print('chose b2')
+                self.externalClockInput = True
+                self.clockSelectionScreenActive = False
+                break
+            await asyncio.sleep(0.05)
+        
     def bpmFromMs(self, ms):
         return int(((1/(ms/1000))*60)/4)
 
@@ -452,7 +477,7 @@ class MasterClockInner(EuroPiScript):
                 # the snapshot should correspond to cvs_snapshot_msg
                 # print(f'cvs_snapshot: {self.cvs_snapshot}', 'cvs_snapshot_msg: ', get_cvs_snapshot_msg())
 
-                await asyncio.sleep_ms(800)  # ANDY slow down the clock
+                await asyncio.sleep_ms(400)  # ANDY slow down the clock
                 # ANDY this is the original code
                 # if self.configMode:
                 #     await asyncio.sleep_ms(int(self.mSBetweenClockCycles - self.msDriftCompensation - self.msDriftCompensationConfigMode))

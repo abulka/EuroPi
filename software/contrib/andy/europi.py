@@ -15,6 +15,15 @@ Will set the CV output 3 to a voltage of 4.5V.
 """
 import sys
 import time
+
+# ANDY
+def ticks_diff(a,b): return a-b
+def ticks_ms():
+    import time
+    return int(time.time()*1000)
+time.ticks_diff = ticks_diff
+time.ticks_ms = ticks_ms
+
 # print(sys.path)
 
 # add stubs/ to sys.path and also update vscode settings .vscode/settings.json
@@ -346,6 +355,20 @@ class DigitalReader:
         self._other = other
         self._both_handler = func
         self.pin.irq(handler=self._bounce_wrapper)
+
+    def fake_debounce(self): # ANDY
+        if self.value() == HIGH:  # button is pressed down - though underlying value is 0 cos button is usually 1 and pulled to 0 when pressed
+            # if time.ticks_diff(time.ticks_ms(), self.last_rising_ms) < self.debounce_delay:
+            #     return
+            self.last_rising_ms = time.ticks_ms()
+            # print("pulse HIGH (physical button down), setting last_rising_ms to", self.last_rising_ms)
+            # return self._rising_handler()
+        elif self.value() == LOW: # button is up again
+            # if time.ticks_diff(time.ticks_ms(), self.last_falling_ms) < self.debounce_delay:
+            #     return
+            self.last_falling_ms = time.ticks_ms()        
+            # self.last_rising_ms = time.ticks_ms()  # last_rising_ms is used to detect a long press
+            # print("pulse LOW (physical button up again), setting last_falling_ms to", self.last_falling_ms)
 
 
 class DigitalInput(DigitalReader):

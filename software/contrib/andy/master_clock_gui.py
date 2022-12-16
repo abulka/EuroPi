@@ -43,9 +43,9 @@ layout = [
                size=(20, 15),
                orientation='horizontal',
                font=('Helvetica', 12))],
-    [sg.Button('b1', use_ttk_buttons=True, font='Courier 14', pad=(100, 0)),
-     sg.Button('b2', use_ttk_buttons=True, font='Courier 14')
-     ],
+    [sg.RealtimeButton(sg.SYMBOL_CIRCLE, key='b1'), sg.RealtimeButton(sg.SYMBOL_CIRCLE, key='b2')],
+    # [sg.Button('b1', use_ttk_buttons=True, font='Courier 14', pad=(100, 0)),
+    #  sg.Button('b2', use_ttk_buttons=True, font='Courier 14')],
     [sg.Text('My LED Status Indicators', size=(20, 1))],
     [sg.Text('cv1', justification='right'), LEDIndicator('_cv1_'),
      sg.Text('cv2', justification='right'), LEDIndicator('_cv2_'),
@@ -84,6 +84,7 @@ async def gui_window_loop():
 
     canvas = window['canvas'].TKCanvas
     values_last = { 'k1': 0, 'k2': 0 }
+    b2_last = 'up'
 
     i = 0
     while True:
@@ -99,9 +100,13 @@ async def gui_window_loop():
         if event == "Andy":
             asyncio.create_task(andy_pressed(canvas))
         if event == "b1":
+            b1.fake_debounce()
             b1._falling_handler()
         if event == "b2":
-            b2._falling_handler()
+            if b2_last == 'up':
+                b2.pin.value(0) # buttons are normally high, and 'pulled' low when on
+                b2.fake_debounce() # only call on the transition from up to down
+            b2_last = 'down'
         if event == "dinbtn":
             din._rising_handler()
         if event == "Exit" or event == None:
@@ -116,10 +121,18 @@ async def gui_window_loop():
                 ref = f'_cv{index+1}_'
                 SetLED(window, ref, 'red' if values != 0 else 'green')
 
+        # Fake button up events, if got to here then no button was pressed
+        if event != "b2" and b2_last == 'down':
+            print('b2 up')
+            b2_last = 'up'
+            b2.pin.value(1) # buttons are normally high, and 'pulled' low when on
+            b2.fake_debounce()
+            b2._falling_handler()
+
         update_display(canvas)
         i += 1
 
-        # print('HA', event, value)
+        # print('HA', event, values)
     window.close()
 
 

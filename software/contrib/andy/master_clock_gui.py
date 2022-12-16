@@ -83,8 +83,7 @@ async def gui_window_loop():
     b2.pin.value(1) # reverse pin logic high/low/pull stuff
 
     canvas = window['canvas'].TKCanvas
-    values_last = { 'k1': 0, 'k2': 0 }
-    b2_last = 'up'
+    values_last = { 'k1': 0, 'k2': 0, 'b1': 'up', 'b2': 'up' }
 
     i = 0
     while True:
@@ -99,14 +98,20 @@ async def gui_window_loop():
 
         if event == "Andy":
             asyncio.create_task(andy_pressed(canvas))
+
+        # Buttons are normally high, and 'pulled' low when on, value 0
+        # means button is down and pulse state in EuroPi is HIGH.
+        # Only call fake_debounce() on the transition from up to down, not all the time
         if event == "b1":
-            b1.fake_debounce()
-            b1._falling_handler()
+            if values_last['b1'] == 'up':
+                b1.pin.value(0)
+                b1.fake_debounce()
+            values_last['b1'] = 'down'
         if event == "b2":
-            if b2_last == 'up':
-                b2.pin.value(0) # buttons are normally high, and 'pulled' low when on
-                b2.fake_debounce() # only call on the transition from up to down
-            b2_last = 'down'
+            if values_last['b2'] == 'up':
+                b2.pin.value(0)
+                b2.fake_debounce()
+            values_last['b2'] = 'down'
         if event == "dinbtn":
             din._rising_handler()
         if event == "Exit" or event == None:
@@ -122,10 +127,16 @@ async def gui_window_loop():
                 SetLED(window, ref, 'red' if values != 0 else 'green')
 
         # Fake button up events, if got to here then no button was pressed
-        if event != "b2" and b2_last == 'down':
+        if event != "b1" and values_last['b1'] == 'down':
+            print('b1 up')
+            values_last['b1'] = 'up'
+            b1.pin.value(1)
+            b1.fake_debounce()
+            b1._falling_handler()
+        if event != "b2" and values_last['b2'] == 'down':
             print('b2 up')
-            b2_last = 'up'
-            b2.pin.value(1) # buttons are normally high, and 'pulled' low when on
+            values_last['b2'] = 'up'
+            b2.pin.value(1)
             b2.fake_debounce()
             b2._falling_handler()
 

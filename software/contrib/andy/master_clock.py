@@ -140,10 +140,10 @@ class MasterClockInner(EuroPiScript):
         def StartStop():
             # handler falling means button has just been released and pulse has gone from high to low
             if ticks_diff(ticks_ms(), b1.last_pressed()) > 500 and ticks_diff(ticks_ms(), b1.last_pressed()) < 4000:
-                print('b1 long press - 💣 leads to lockup bug cos its not async')
-                self.getClockOption()
+                print('b1 long press', ticks_diff(ticks_ms(), b1.last_pressed()), '- 💣 leads to lockup bug cos its not async')
+                # self.getClockOption() # ANDY
             else:
-                print('b1 short press')
+                print('b1 short press', ticks_diff(ticks_ms(), b1.last_pressed()))
                 self.running = not self.running
 
 
@@ -151,7 +151,7 @@ class MasterClockInner(EuroPiScript):
         @b2.handler_falling
         def cycleScreen():
             if ticks_diff(ticks_ms(), b2.last_pressed()) > 500 and ticks_diff(ticks_ms(), b2.last_pressed()) < 4000:
-                print('b2 long press')
+                print('b2 long press', ticks_diff(ticks_ms(), b2.last_pressed()))
                 self.configMode = not self.configMode
                 print('configMode', self.configMode)
                 # This will stop the clock from running in config mode - keep here as it might be needed in the future
@@ -161,7 +161,7 @@ class MasterClockInner(EuroPiScript):
                     self.saveState()
                     self.k2Unlocked = False
             else:
-                print('b2 short press')
+                print('b2 short press', ticks_diff(ticks_ms(), b2.last_pressed()))
                 self.k2Unlocked = False
                 
                 # Turn off config mode to avoid current knob positions messing up other settings on the next screen

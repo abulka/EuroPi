@@ -1,0 +1,6 @@
+echo python /Users/andy/.pyenv/versions/anaconda3-2022.05/envs/ldm/share/kivy-examples/async/asyncio_advanced.py
+echo python /Users/andy/.pyenv/versions/anaconda3-2022.05/envs/ldm/share/kivy-examples/demo/kivycatalog/main.py
+echo python /Users/andy/.pyenv/versions/anaconda3-2022.05/envs/ldm/share/kivy-examples/demo/showcase/main.py 
+echo python /Users/andy/.pyenv/versions/anaconda3-2022.05/envs/ldm/share/kivy-examples/demo/multistroke/main.py
+echo python /Users/andy/.pyenv/versions/anaconda3-2022.05/envs/ldm/share/kivy-examples/guide/quickstart/main.py
+echo python /Users/andy/.pyenv/versions/anaconda3-2022.05/envs/ldm/share/kivy-examples/async/asyncio_basic.py

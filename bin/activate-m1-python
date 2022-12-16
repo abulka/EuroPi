@@ -1,0 +1,4 @@
+echo Andy please copy and paste this to activate the M1 Python environment
+echo source /Users/andy/.pyenv/versions/anaconda3-2022.05/bin/activate ldm
+# python /Users/andy/.pyenv/versions/anaconda3-2022.05/envs/ldm/share/kivy-examples/async/asyncio_advanced.py
+# python /Users/andy/.pyenv/versions/anaconda3-2022.05/envs/ldm/share/kivy-examples/demo/kivycatalog/main.py

@@ -428,7 +428,6 @@ class MasterClockInner(EuroPiScript):
         self.saveState()
 
     async def main(self):
-        
         # ANDY - just for fun display the EuroPi bootsplash
         bootsplash()
         await asyncio.sleep_ms(1500)

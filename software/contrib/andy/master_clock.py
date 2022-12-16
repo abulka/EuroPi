@@ -258,10 +258,8 @@ class MasterClockInner(EuroPiScript):
             self.activeOption = k1.choice([2, 3, 4, 5, 6, 7, 8])
         else:
             self.activeOption = k1.choice([1, 2, 3, 4, 5, 6, 7, 8])
-        # print('config screen self.activeOption k1.choice', self.activeOption, 'because', k1.pin._pin.value())
 
         oled.fill(0)
-        # print('self.configMode and self.activeOption', self.configMode, self.activeOption)
         if self.configMode and self.activeOption != 3:
             configMarker = '|'
             

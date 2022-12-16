@@ -4,3 +4,7 @@ echo python /Users/andy/.pyenv/versions/anaconda3-2022.05/envs/ldm/share/kivy-ex
 echo python /Users/andy/.pyenv/versions/anaconda3-2022.05/envs/ldm/share/kivy-examples/demo/multistroke/main.py
 echo python /Users/andy/.pyenv/versions/anaconda3-2022.05/envs/ldm/share/kivy-examples/guide/quickstart/main.py
 echo python /Users/andy/.pyenv/versions/anaconda3-2022.05/envs/ldm/share/kivy-examples/async/asyncio_basic.py
+
+echo on Macbook Air
+# /Users/andy/.pyenv/versions/3.8.13/share/kivy-examples
+echo python /Users/andy/.pyenv/versions/3.8.13/share/kivy-examples/demo/showcase/main.py

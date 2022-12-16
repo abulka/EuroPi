@@ -1,0 +1,43 @@
+#:kivy 1.0.9
+# File name: helloworld.kv
+
+<FlatButton@ButtonBehavior+Label>:  
+    font_sixe: 16  
+
+# We need to implement the MyCustomWidget class here.
+<MyCustomWidget>: 
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Hello'+' World!'        
+
+    # BoxLayout:
+    #     orientation: 'vertical'
+    #     Label:
+    #         text: 'Hello World'
+    #         # size_hint_y: .1
+    #     TextInput:
+    #         hint_text: 'Type Something'
+    #         # size_hint_y: .1
+    #     Button:
+    #         text: 'Press Me'
+    #         # size_hint_y: .1
+    #     Button:
+    #         text: 'Press Me Too'
+    #         # size_hint_y: .1
+    #     FlatButton:  
+    #         text: "x"  
+    #         # size_hint_y: .1
+
+
+    # TextInput:
+    #     hint_text: 'Type Something'
+    #     pos: root.x + 20, root.top - self.height - 20
+    # Button:
+    #     text: 'Press Me'
+    #     pos: root.x + 40, root.top - self.height - 20
+    # Button:
+    #     text: 'Press Me Too'
+    # FlatButton:  
+    #     text: "x"  
+    #     size_hint_x: .1          

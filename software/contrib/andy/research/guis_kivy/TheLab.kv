@@ -68,6 +68,15 @@ EuroPiLayout:
             pos: self.center_x, self.center_y - leds/2
             size: leds, leds
 
+<CanvasCvIn>:
+    canvas:
+        Color:
+            rgb: 0, 0, 1
+        Ellipse:
+            # pos: self.pos
+            pos: self.center_x, self.center_y - leds/2
+            size: leds, leds
+
 
 <EuroPiLayout>:
     BoxLayout:
@@ -80,8 +89,8 @@ EuroPiLayout:
             # CheckBox:
             #     text: 'Hello World'
             #     active: True
-            CanvasLed:
-            CanvasLed:
+            CanvasCvIn:
+            CanvasCvIn:
         CanvasExample2:
 		# Widget:
 		# 	canvas:

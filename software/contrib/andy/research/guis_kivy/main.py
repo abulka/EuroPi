@@ -21,6 +21,9 @@ class CanvasExample2(Widget):
 class CanvasLed(Widget):
     pass
 
+class CanvasCvIn(Widget):
+    pass
+
 class TheLabApp(App):
     pass
 

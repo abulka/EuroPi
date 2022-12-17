@@ -1,0 +1,131 @@
+#:kivy 1.0.9
+
+# MainWidget:
+# FredLayout:
+EuroPiLayout:
+# CanvasExample:
+
+<MainWidget>:
+    Button:
+        text: "Hello World"
+        size: '100dp', '400dp'
+        pos: '100dp', '100dp'
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Hello World'
+        Label:
+            text: 'Hello World'
+        Label:
+            text: 'Hello World'
+
+<FredLayout>:
+    BoxLayout:
+        orientation: 'vertical'
+        Button:
+            text: 'Hello World'
+        Button:
+            text: 'Hello World'
+
+#:set s dp(450)
+
+<CanvasExample>:
+    canvas:
+        Color:
+            rgb: 1, 0, 0
+        Rectangle:
+            # pos: self.pos
+            # pos: self.center
+            pos: self.center_x - s/2, self.center_y - s/2
+            # size: self.size
+            size: s, s/2
+
+<CanvasExample2>:
+    canvas:
+        Color:
+            rgb: 0, 1, 0
+        Rectangle:
+            # pos: self.pos
+            # pos: self.center
+            # pos: self.center_x - s/2, self.center_y - s/2
+            # size: self.size
+            # size: s, s/2
+            pos: self.pos
+            size: self.size 
+
+#:set leds dp(20)
+<CanvasLed>:
+    canvas:
+        Color:
+            rgb: 1, 0, 0
+        Ellipse:
+            # pos: self.pos
+            pos: self.center_x, self.center_y - leds/2
+            size: leds, leds
+
+
+<EuroPiLayout>:
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            orientation: 'horizontal'
+            CheckBox:
+                text: 'Hello World'
+                active: True
+            CheckBox:
+                text: 'Hello World'
+                active: True
+        CanvasExample2:
+		# Widget:
+		# 	canvas:
+		# 		Color:
+		# 			rgb: (255, 0, 255)
+		# 		Rectangle:
+		# 			pos: self.pos
+		# 			size: self.size        
+        BoxLayout:
+            orientation: 'horizontal'
+            Slider:
+                min: 0
+                max: 100
+                value: 50
+                on_value: root.on_slider_value(self)
+            Slider:
+                min: 0
+                max: 100
+                value: 50
+                on_value: root.on_slider_value(self)
+        BoxLayout:
+            orientation: 'horizontal'
+            Button:
+                text: 'b1'
+            Button:
+                text: 'b2'
+        # Grid 3 columns 2 rows of buttons
+        GridLayout:
+            cols: 3
+            rows: 2
+            CanvasLed:
+            CanvasLed:
+            CanvasLed:
+            CanvasLed:
+            CanvasLed:
+            CanvasLed:
+        # Debug Area
+        Label:
+            text: 'Debug Area'
+            size_hint_y: None
+            height: '50dp'
+        # multiline text area
+        TextInput:
+            text: 'Hello World'
+            size_hint_y: None
+            height: '100dp'
+        BoxLayout:
+            orientation: 'horizontal'
+            Button:
+                text: 'Exit'
+            Button:
+                text: 'test1'
+            Button:
+                text: 'test2'

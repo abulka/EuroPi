@@ -1,4 +1,4 @@
-#:kivy 1.0.9
+#:kivy 2.1.0
 
 # MainWidget:
 # FredLayout:
@@ -55,8 +55,8 @@ EuroPiLayout:
             pos: self.pos
             size: self.size
 
-            pos: self.center[0]-500/2, self.center[1]
-            size: [500, 45]
+            # pos: self.center[0]-500/2, self.center[1]
+            # size: [500, 45]
 
 #:set leds dp(20)
 <CanvasLed>:
@@ -121,7 +121,9 @@ EuroPiLayout:
             #     active: True
             CanvasCvIn:
             CanvasCvIn:
-        CanvasExample2:
+        BoxLayout:
+            padding: '130dp', '0dp'
+            CanvasExample2:
 		# Widget:
 		# 	canvas:
 		# 		Color:

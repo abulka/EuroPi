@@ -77,8 +77,38 @@ EuroPiLayout:
             pos: self.center_x, self.center_y - leds/2
             size: leds, leds
 
+# https://kivycoder.com/rounded-buttons-with-kivy-python-kivy-gui-tutorial-22/
+# <RoundedButton@Button>:
+#     background_normal: ''
+#     background_color: (0,0,0,0)
+#     canvas.before:
+#         Color:
+#             rgba: (48/255), (84/255), (150/255), 1
+#         RoundedRectangle:
+#             pos: self.pos
+#             size: self.size
+#             radius: [58,]
+
+<RoundedButton@Button>:
+    #Prevents the disabled button text from disappearing​    
+    background_disabled_normal:''
+    #disabled_color: 1,1,1,1
+    background_color: 0,0,0,0 # the last zero is the critical on, make invisible​    
+    canvas.before:
+        Color:
+            rgba: (0.4, 0.4, 0.4, 1) #if self.state=='normal' else (0, 0.7, 0.7, 1) # visual feedback of press
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [58,]
 
 <EuroPiLayout>:
+    canvas.before:
+        Color:
+            rgb: .14, .14, .14
+        Rectangle:
+            pos: self.pos
+            size: self.size
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -117,11 +147,25 @@ EuroPiLayout:
             padding: '30dp', '20dp'
             spacing: '20dp'
             orientation: 'horizontal'
-            Button:
-                # text: 'b1'
-                text: str(self.size)
-            Button:
+            # Button:
+            #     # text: 'b1'
+            #     text: str(self.size)
+            # Button:
+            #     text: 'b2'
+            RoundedButton:
+                text: 'b1'
+                # pos_hint: {'center_x': .5, 'center_y': .5}
+                # on_press: print('b1 pressed')
+                # on_press:
+                #     # label.text = 'The button was pressed'
+                #     print('The button was pressed')
+                # on_release:
+                #     # label.text = 'The button was released'
+                #     print('The button was released\\n')
+
+            RoundedButton:
                 text: 'b2'
+                # on_press: print('b2 pressed')
         # Grid 3 columns 2 rows of buttons
         GridLayout:
             cols: 3
@@ -152,3 +196,9 @@ EuroPiLayout:
                 text: 'test1'
             Button:
                 text: 'test2'
+                on_press:
+                    # label.text = 'The button was pressed'
+                    print('The button was pressed')
+                on_release:
+                    # label.text = 'The button was released'
+                    print('The button was released')

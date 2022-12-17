@@ -24,6 +24,9 @@ class CanvasLed(Widget):
 class CanvasCvIn(Widget):
     pass
 
+class RoundedButton(Widget):
+    pass
+
 class TheLabApp(App):
     pass
 

@@ -100,14 +100,15 @@ MDScreen:
             orientation: 'horizontal'
             padding: '30dp', '20dp'
             spacing: '20dp'
-            # pos_hint: {'center_y': 0.1, 'center_x': 0.5}
+            MDWidget:
             MDRaisedButton:
                 text: 'Exit'
-                pos_hint: {"center_x": 0.1}
+                on_press:
+                    exit()
+            MDWidget:
             MDRaisedButton:
                 text: 'test1'
-                font_size: root.width / 42
-                pos_hint: {'center_y': 0.1, 'center_x': 0.5}
+            MDWidget:
             MDRaisedButton:
                 text: 'test2'
                 # pos_hint: {"center_x": 0.5}
@@ -117,6 +118,7 @@ MDScreen:
                 on_release:
                     # label.text = 'The button was released'
                     print('The button was released')
+            MDWidget:
 
 '''
 
@@ -157,6 +159,7 @@ class Display(MDWidget):
         texture = Texture.create(size=(128, 32))
         size = 128 * 32 * 3
         buf = [int(x * 255 / size) for x in range(size)]
+        print(buf)
         buf = bytes(buf)
         print(len(image), len(buf))
         texture.blit_buffer(buf, colorfmt='rgb', bufferfmt='ubyte')

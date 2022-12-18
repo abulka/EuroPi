@@ -8,13 +8,39 @@ MDScreen:
         orientation: 'horizontal'
         padding: '30dp', '20dp'
         spacing: '20dp'
+        MDWidget:                    # add this
         MDRaisedButton:
             text: 'Exit'
-            # pos_hint: {"center_x": 0.5}
+        MDWidget:                    # add this
         MDRaisedButton:
             text: 'test1'
+        MDWidget:                    # add this
         MDRaisedButton:
             text: 'test2'
+        MDWidget:                    # add this
+'''
+KVx='''
+MDScreen:
+    MDBoxLayout:
+        orientation: 'horizontal'
+        padding: '30dp', '20dp'
+        spacing: '20dp'
+        # md_bg_color: 'gray'        # to see size
+        MDBoxLayout:
+            MDFloatLayout:    
+                MDRaisedButton:
+                    text: 'Exit'
+                    pos_hint: {"center_x": 0.5, 'center_y': .5}
+        MDBoxLayout:
+            MDFloatLayout:
+                MDRaisedButton:
+                    text: 'test1'
+                    pos_hint: {"center_x": 0.5, 'center_y': .5}
+        MDBoxLayout:
+            MDFloatLayout:
+                MDRaisedButton:
+                    text: 'test2'
+                    pos_hint: {"center_x": 0.5, 'center_y': .5}
 '''
 
 class EuroApp(MDApp):

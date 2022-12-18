@@ -4,15 +4,15 @@ from kivymd.uix.widget import MDWidget
 from kivy.graphics.texture import Texture
 from kivy.graphics import Rectangle
 from kivy.core.text import Label as CoreLabel
+from kivy.core.window import Window
 
 KV = '''
 #:set leds dp(20)
 <CanvasCvIn>:
     canvas:
         Color:
-            rgb: 0, 0, 1
+            rgb: .3, .7, .2
         Ellipse:
-            # pos: self.pos
             pos: self.center_x, self.center_y - leds/2
             size: leds, leds
 <CanvasLed>:
@@ -25,31 +25,33 @@ KV = '''
 <Display>:
     canvas:
         Color:
-            # rgb: 0, 1, 0 # green
-            rgb: 1, 1, 1 # white
+            rgb: 1, 1, 1  # white
         Rectangle:
             pos: self.pos
             size: self.size
 MDScreen:
-    md_bg_color: .14, .14, .14 #'red'#app.theme_cls.primary_color
+    md_bg_color: get_color_from_hex('2F4F4F')
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
+            size_hint: 1, 0.5
             orientation: 'horizontal'
             CanvasCvIn:
             CanvasCvIn:
         BoxLayout:
-            padding: '130dp', '0dp'
+            # padding: '100dp', '50dp'
+            size_hint: 0.8, 0.2
+            pos_hint: {'center_x':0.5}
             Display:
                 # on_touch_down: self.draw()
                 on_touch_down: self.drawLogo()
         BoxLayout:
             orientation: 'horizontal'
-            padding: '30dp', '20dp'
+            padding: '10dp', '20dp'
             spacing: '20dp'
             MDSlider:
-                min: 0
-                max: 100
+                min: 1
+                max: 65535
                 value: 50
                 hint: True
                 hint_bg_color: "red"
@@ -57,8 +59,8 @@ MDScreen:
                 hint_radius: [6, 0, 6, 0]
                 on_value: print(f'Slider value is {int(self.value)}')
             MDSlider:
-                min: 0
-                max: 100
+                min: 1
+                max: 65535
                 value: 50
                 hint: True
                 hint_bg_color: "red"
@@ -73,18 +75,18 @@ MDScreen:
             spacing: 20
             MDRoundFlatButton:
                 text: 'b1'
-                md_bg_color: get_color_from_hex('404040')
-                line_color: get_color_from_hex('404040')
+                md_bg_color: get_color_from_hex('008B8B')
+                line_color: get_color_from_hex('008B8B')
                 text_color: get_color_from_hex('FFFFFF')
-
+                on_press: print('b1 pressed')
+                on_release: print('b1 released')
             MDRoundFlatButton:
                 text: 'b2'
-                md_bg_color: get_color_from_hex('404040')
-                line_color: get_color_from_hex('404040')
+                md_bg_color: get_color_from_hex('008B8B')
+                line_color: get_color_from_hex('008B8B')
                 text_color: get_color_from_hex('FFFFFF')
                 on_press: print('b2 pressed')
                 on_release: print('b2 released')
-
         GridLayout:
             cols: 3
             rows: 2
@@ -163,7 +165,7 @@ class Display(MDWidget):
 
         # Drawing text
 
-        mylabel = CoreLabel(text="Hi there!", font_size=25, color=(0, 0, 0, 1))
+        mylabel = CoreLabel(text="Hi there!", font_size=12, color=(0, 0, 0, 1))
         # Force refresh to compute things and generate the texture
         mylabel.refresh()
         # Get the texture and the texture size
@@ -186,5 +188,5 @@ class EuroApp(MDApp):
     # def on_start(self):
     #     self.fps_monitor_start()
 
-
+Window.size = (350, 700)
 EuroApp().run()

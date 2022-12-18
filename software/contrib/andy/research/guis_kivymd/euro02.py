@@ -183,6 +183,37 @@ class Display(MDWidget):
         bit of the first byte in the array. 
         """
 
+
+        # importing image class from PIL package
+        from PIL import Image, ImageOps
+        # creating image object
+        image = Image.open('software/contrib/andy/temp.xbm')
+        print(image, type(image), image.size, image.mode)
+        # convert to rgb
+        image_rgb = image.convert('RGB')
+        image_rgb = ImageOps.invert(image_rgb)
+        print(image_rgb, type(image_rgb), image_rgb.size, image_rgb.mode)
+        from kivy.core.image import Image as CoreImage
+        from kivy.uix.image import Image as kiImage
+        from kivy.graphics.context_instructions import Color 
+        from io import BytesIO
+
+        # canvas_img = Image.new('RGB', (240, 120), color=(255, 255, 255))
+        # (do stuff to canvas_img)
+        data = BytesIO()
+        image_rgb.save(data, format='png')
+        data.seek(0) # yes you actually need this
+        im = CoreImage(BytesIO(data.read()), ext='png')
+        # self.beeld = kiImage() # only use this line in first code instance
+        # self.beeld.texture = im.texture       
+        texture = im.texture
+        # texture.flip_vertical()  # not necessary, but does work
+        with self.canvas:
+            # Color(1,1,1,1) # doesn't seem necessary
+            Rectangle(texture=texture, pos=self.pos, size=(128, 32))
+
+        
+
         # Drawing text
 
         mylabel = CoreLabel(text="Hi there!", font_size=12, color=(0, 0, 0, 1))

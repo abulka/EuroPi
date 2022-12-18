@@ -175,7 +175,7 @@ def update_display(canvas):
                 canvas.delete('all')
         elif command == 'blit':
             frame_buffer, x, y = params
-            filename = 'software/contrib/andy/logo.xbm'
+            filename = 'software/contrib/andy/temp.xbm'
             convert_to_xbm(frame_buffer, filename)
             canvas.create_bitmap(
                 130, 20, bitmap=f'@{filename}', foreground='green')  # WORKS!  🎉

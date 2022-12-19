@@ -18,8 +18,8 @@ from europi_simulator_util import convert_to_xbm
 from europi import FrameBuffer, MONO_HLSB
 
 kv = '''
-MainThing:
-# EuroPiLayout:
+# MainThing:
+EuroPiLayout:
 
 #:set leds dp(20)
 <CanvasCvIn>:
@@ -97,6 +97,7 @@ MainThing:
         CanvasLed:
         CanvasLed:
         CanvasLed:
+    DebugArea:
 <DebugArea>:
     BoxLayout:
         orientation: 'vertical'
@@ -111,11 +112,11 @@ MainThing:
                     exit()
             Button:
                 text: 'Draw Logo'
-                # on_press: app.root.ids.disp.drawLogo()
+                on_press: root.parent.ids.disp.drawLogo()
             Button:
                 text: 'Clear Display'
                 on_press:
-                    on_press: root.ids.disp.clear()
+                    on_press: root.parent.ids.disp.clear()
             Button:
                 text: 'DUMP'
                 on_press:
@@ -137,11 +138,6 @@ MainThing:
             Label:
                 id: label
                 text: 'Button is "{}"'.format(btn.state)
-<MainThing>:
-    orientation: 'vertical'
-    EuroPiLayout:
-        size_hint: 1, 5
-    DebugArea:
 '''
 
 class EuroPiLayout(BoxLayout):
@@ -149,9 +145,6 @@ class EuroPiLayout(BoxLayout):
         print(f'Slider value is {int(widget.value)}')
 
 class DebugArea(BoxLayout):
-    pass
-
-class MainThing(BoxLayout):
     pass
 
 class CanvasLed(Widget):

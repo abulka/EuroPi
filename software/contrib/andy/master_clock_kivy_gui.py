@@ -2,6 +2,7 @@
 in asyncio event loop as just another async coroutine.
 '''
 import asyncio
+import random
 from PIL import Image, ImageOps
 from io import BytesIO
 from kivy.app import async_runTouchApp
@@ -178,6 +179,13 @@ class EuroPiLayout(BoxLayout):
         # print('custom_update:', self, self.ids['cv1'])
         # self.ids['cv1'].toggle_state()
         self.update_leds()
+        
+        display_widget = self.ids['disp']
+        x = random.randint(0, 100)
+        y = random.randint(0, 20)
+        display_widget.blah('fred', x, y)
+        # update_display(canvas)
+
 
     def update_leds(self):
         # make a copy since master clock is updating it
@@ -305,6 +313,52 @@ class Display(Widget):
         # Clear tequnique 2 - not used
         # with self.canvas.after:    # add '.after' (but not .before)
         #     Rectangle(texture=texture, pos=self.pos, size=(128, 32))
+
+    def blah(self, text, x, y, colour=None):
+        self.clear()
+        mylabel = CoreLabel(text=text, font_size=11, color=(0, 0, 0, 1))
+        # Force refresh to compute things and generate the texture
+        mylabel.refresh()
+        # Get the texture and the texture size
+        texture = mylabel.texture
+        texture_size = list(texture.size)
+        # Draw the texture on any widget canvas
+        # myWidget = self
+        # myWidget.canvas.add(Rectangle(texture=texture, size=texture_size))
+        with self.canvas:
+            pos = self.pos
+            pos = (pos[0] + x, pos[1] + y)
+            Rectangle(texture=texture, pos=pos, size=texture_size)
+
+def update_display(canvas):
+    if not oled.flush_to_ui:
+        return
+    for cmd in oled.commands:
+        command = cmd[0]
+        params = cmd[1]
+        if command == 'text':
+            text, x, y, colour = params
+            font_size = 14
+            fill = 'black'
+            if colour == 88:
+                fill = 'green'
+                font_size = 12
+            canvas.create_text((x, y,),  anchor='nw', text=text, font=(
+                'Helvetica', font_size), fill=fill)  # must have fill, and anchor='nw' helps position text
+        elif command == 'fill':
+            value = params[0]
+            if value == 0:
+                canvas.delete('all')
+        elif command == 'blit':
+            frame_buffer, x, y = params
+            filename = 'software/contrib/andy/temp.xbm'
+            convert_to_xbm(frame_buffer, filename)
+            canvas.create_bitmap(
+                130, 20, bitmap=f'@{filename}', foreground='green')  # WORKS!  🎉
+        else:
+            print('unknown command', command)
+    oled.commands = []
+    oled.flush_to_ui = False
 
 async def run_app_happily(root, other_task):
     '''This method, which runs Kivy, is run by the asyncio loop as one of the

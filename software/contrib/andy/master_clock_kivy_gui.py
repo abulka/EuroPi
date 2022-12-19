@@ -18,7 +18,8 @@ from europi_simulator_util import convert_to_xbm
 from europi import FrameBuffer, MONO_HLSB
 
 kv = '''
-EuroPiLayout:
+MainThing:
+# EuroPiLayout:
 
 #:set leds dp(20)
 <CanvasCvIn>:
@@ -84,6 +85,7 @@ EuroPiLayout:
         # orientation: 'horizontal' # this breaks the buttons?
         Button:
             text: 'b1'
+            on_press: print('app', app) # CRASH
         Button:
             text: 'b2'
     GridLayout:
@@ -94,53 +96,63 @@ EuroPiLayout:
         CanvasLed:
         CanvasLed:
         CanvasLed:
-        CanvasLed:            
-# BoxLayout:
-#     orientation: 'vertical'
-#     EuroPiLayout:
-#         size_hint: 1, 5
-
-#     # Debug Area
-#     BoxLayout:
-#         orientation: 'horizontal'
-#         padding: '30dp', '20dp'
-#         spacing: '20dp'
-#         Button:
-#             text: 'Exit'
-#             on_press:
-#                 # app.stop()
-#                 exit()
-#         Button:
-#             text: 'Draw Logo'
-#             # on_press: app.root.ids.disp.drawLogo()
-#         Button:
-#             text: 'Clear Display'
-#             on_press:
-#                 on_press: root.ids.disp.clear()
-#         Button:
-#             text: 'DUMP'
-#             on_press:
-#                 # label.text = 'The button was pressed'
-#                 # print('app', app) # CRASH
-#                 # print('app.root', app.root) # CRASH
-#                 print('root.ids', root.ids)
-#                 print('self.ids', self.ids)
-#                 print('self.parent.ids', self.parent.ids)
-#             on_release:
-#                 # label.text = 'The button was released'
-#                 print('The button was released')
-#         Button:
-#             id: btn
-#             text: 'Press me'
-#     BoxLayout:
-#         Label:
-#             id: label
-#             text: 'Button is "{}"'.format(btn.state)
+        CanvasLed:
+<DebugArea>:
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: '30dp', '20dp'
+            spacing: '20dp'
+            Button:
+                text: 'Exit'
+                on_press:
+                    # app.stop()
+                    exit()
+            Button:
+                text: 'Draw Logo'
+                # on_press: app.root.ids.disp.drawLogo()
+            Button:
+                text: 'Clear Display'
+                on_press:
+                    on_press: root.ids.disp.clear()
+            Button:
+                text: 'DUMP'
+                on_press:
+                    # label.text = 'The button was pressed'
+                    # print('app', app) # CRASH
+                    # print('app.root', app.root) # CRASH
+                    print('root.parent', root.parent)
+                    print('root.parent.ids', root.parent.ids)
+                    print('root.ids', root.ids)
+                    print('self.ids', self.ids)
+                    print('self.parent.ids', self.parent.ids)
+                on_release:
+                    # label.text = 'The button was released'
+                    print('The button was released')
+            Button:
+                id: btn
+                text: 'Press me'
+        BoxLayout:
+            Label:
+                id: label
+                text: 'Button is "{}"'.format(btn.state)
+<MainThing>:
+    orientation: 'vertical'
+    EuroPiLayout:
+        size_hint: 1, 5
+    DebugArea:
 '''
 
 class EuroPiLayout(BoxLayout):
     def on_slider_value(self, widget):
         print(f'Slider value is {int(widget.value)}')
+
+class DebugArea(BoxLayout):
+    pass
+
+class MainThing(BoxLayout):
+    pass
 
 class CanvasLed(Widget):
     pass

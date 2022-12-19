@@ -12,6 +12,7 @@ BoxLayout:
     Button:
         id: btn
         text: 'Press me'
+        # on_press: print(app) # ANDY - CRASHES
     BoxLayout:
         Label:
             id: label

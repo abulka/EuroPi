@@ -3,7 +3,7 @@ from kivy.uix.widget import Widget
 from kivy.lang.builder import Builder
 from kivy.core.window import Window
 # Window.clearcolor = (1, 1, 1, 1)
-Window.clearcolor = 'Red'
+# Window.clearcolor = 'Red'
 
 kv = '''
 BoxLayout:

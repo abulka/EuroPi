@@ -7,36 +7,134 @@ from kivy.app import async_runTouchApp
 from kivy.lang.builder import Builder
 from master_clock import MasterClockInner
 from europi import cvs, get_cvs_snapshot_msg, oled, bootsplash, b1, b2, din, k1, k2
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.widget import Widget
 
 kv = '''
-BoxLayout:
+#:set leds dp(20)
+<CanvasCvIn>:
+    canvas:
+        Color:
+            rgb: .3, .7, .2
+        Ellipse:
+            pos: self.center_x, self.center_y - leds/2
+            size: leds, leds
+<CanvasLed>:
+    canvas:
+        Color:
+            rgb: 1, 0, 0
+        Ellipse:
+            pos: self.center_x, self.center_y - leds/2
+            size: leds, leds 
+<Display>:
+    canvas:
+        Color:
+            rgb: 1, 1, 1  # white
+        Rectangle:
+            pos: self.pos
+            size: self.size
+<EuroPiLayout>:
     orientation: 'vertical'
-    Button:
-        id: btn
-        text: 'Press me'
+    canvas.before:
+        Color:
+            rgb: .14, .14, .14
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        size_hint: 1, 0.5
+        orientation: 'horizontal'
+        CanvasCvIn:
+        CanvasCvIn:
+    BoxLayout:
+        size_hint: 0.8, 0.2
+        pos_hint: {'center_x':0.5}
+        Display:
+            id: disp
+    BoxLayout:
+        orientation: 'horizontal'
+        padding: '30dp', '20dp'
+        spacing: '20dp'
+        Slider:
+            min: 0
+            max: 100
+            value: 50
+            on_value: root.on_slider_value(self)
+        Slider:
+            min: 0
+            max: 100
+            value: 50
+            on_value: root.on_slider_value(self)
+    BoxLayout:
+        size_hint: 1, 0.5
+        padding: '130dp', '0dp'
+        spacing: '20dp'
+        # orientation: 'horizontal' # this breaks the buttons?
+        Button:
+            text: 'b1'
+        Button:
+            text: 'b2'
     GridLayout:
         cols: 3
+        rows: 2
+        CanvasLed:
+        CanvasLed:
+        CanvasLed:
+        CanvasLed:
+        CanvasLed:
+        CanvasLed:            
+BoxLayout:
+    orientation: 'vertical'
+    EuroPiLayout:
+        size_hint: 1, 5
+
+    # Debug Area
+    BoxLayout:
+        orientation: 'horizontal'
+        padding: '30dp', '20dp'
+        spacing: '20dp'
+        Button:
+            text: 'Exit'
+            on_press:
+                # app.stop()
+                exit()
+        Button:
+            text: 'Draw Logo'
+            # on_press: app.root.ids.disp.drawLogo()
+        Button:
+            text: 'Clear Display'
+            on_press:
+                on_press: app.root.ids.disp.clear()
+        Button:
+            text: 'test2'
+            on_press:
+                # label.text = 'The button was pressed'
+                print('The button was pressed')
+            on_release:
+                # label.text = 'The button was released'
+                print('The button was released')
         Button:
             id: btn
             text: 'Press me'
-        Button:
-            id: btn
-            text: 'Press me'
-        Button:
-            id: btn
-            text: 'Press me'
-    Button:
-        id: btn
-        text: 'Press me'
-    Button:
-        id: btn
-        text: 'Press me'
     BoxLayout:
         Label:
             id: label
             text: 'Button is "{}"'.format(btn.state)
 '''
 
+class EuroPiLayout(BoxLayout):
+    def on_slider_value(self, widget):
+        print(f'Slider value is {int(widget.value)}')
+
+class CanvasLed(Widget):
+    pass
+
+class CanvasCvIn(Widget):
+    pass
+
+class Display(Widget):
+    def clear(self):
+        self.canvas.clear()
 
 async def run_app_happily(root, other_task):
     '''This method, which runs Kivy, is run by the asyncio loop as one of the

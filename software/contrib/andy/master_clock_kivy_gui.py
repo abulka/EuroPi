@@ -30,13 +30,27 @@ EuroPiLayout:
         Ellipse:
             pos: self.center_x, self.center_y - leds/2
             size: leds, leds
+#:set my_color (.4, .3, .4)
+#:set my_color_hl (.5, .4, .5)
 <CanvasLed>:
+    state: 'normal'
     canvas:
         Color:
-            rgb: 1, 0, 0
+            rgb: my_color if self.state == 'normal' else my_color_hl
         Ellipse:
             pos: self.center_x, self.center_y - leds/2
             size: leds, leds 
+    # mycolour: 1, 1, 1
+    # mycolour: 'normal'
+    # canvas:
+    #     Color:
+    #         # rgb: root.mycolour
+    #         # rgb: 1, 0, 0
+    #         # rgb: 1, 0, 1 if self.mycolour == 'normal' else 0, 1, 0
+    #         rgb: 0, 0, 1 #if self.mycolour == 'normal' else 0, 1, 0
+    #     Ellipse:
+    #         pos: self.center_x, self.center_y - leds/2
+    #         size: leds, leds 
 <Display>:
     canvas:
         Color:
@@ -62,9 +76,10 @@ EuroPiLayout:
         pos_hint: {'center_x':0.5}
         Display:
             id: disp
-            on_touch_down:
-                # self.clear()
-                self.drawLogo()
+            # on_touch_down:
+            #     print(id)
+            #     # self.clear()
+            #     self.drawLogo()
     BoxLayout:
         orientation: 'horizontal'
         padding: '30dp', '20dp'
@@ -93,11 +108,29 @@ EuroPiLayout:
         cols: 3
         rows: 2
         CanvasLed:
+            id: cv1
+            # mycolour: 1, 0, 0
+            # mycolour: 'normalX'
+            # on_touch_down:
+            #     print(self.mycolour)
+            state: 'XXXX'
         CanvasLed:
+            id: cv2
+            # mycolour: 'blah'
+            # on_touch_down:
+            #     print(self.mycolour)
         CanvasLed:
+            id: cv3
+            state: 'normal'
         CanvasLed:
+            id: cv4
+            state: 'XXX'
         CanvasLed:
+            id: cv5
+            state: 'on'
         CanvasLed:
+            id: cv6
+            state: 'on'
     DebugArea:
 <DebugArea>:
     BoxLayout:
@@ -118,6 +151,10 @@ EuroPiLayout:
                 text: 'Clear Display'
                 on_press:
                     on_press: root.parent.ids.disp.clear()
+            Button:
+                text: 'LED'
+                on_press:
+                    on_press: root.parent.ids.cv1.mycolour = 1, 0, 0
             Button:
                 text: 'DUMP'
                 on_press:
@@ -150,6 +187,10 @@ class DebugArea(BoxLayout):
 
 class CanvasLed(Widget):
     pass
+    # def SetLED(self, color):
+    #     graph = window[key]
+    #     graph.erase()
+    #     graph.draw_circle((0, 0), 12, fill_color=color, line_color=color)
 
 class CanvasCvIn(Widget):
     pass
@@ -159,6 +200,9 @@ class Display(Widget):
         with self.canvas:
             Color(rgba=(1,1,1,1))
             Rectangle(pos=self.pos, size=(128, 32))
+
+        # Clear tequnique 2 - not used
+        # self.canvas.after.clear()
 
     def drawLogo(self):
         image = b"\x00\x00\x00\x01\xf0\x00\x00\x00\x00\x00\x00\x00\x03\x00\x00\x00\x00\x00\x00\x02\x08\x00\x00\x00\x00\x00\x00\x00\x03\x00\x00\x00\x00\x00\x00\x04\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x03\xc4\x04\x00\x18\x00\x00\x00p\x07\x00\x00\x00\x00\x00\x00\x0c$\x02\x00~\x0c\x18\xb9\x8c8\xc3\x00\x00\x00\x00\x00\x10\x14\x01\x00\xc3\x0c\x18\xc3\x060c\x00\x00\x00\x00\x00\x10\x0b\xc0\x80\x81\x8c\x18\xc2\x020#\x00\x00\x00\x00\x00 \x04\x00\x81\x81\x8c\x18\x82\x02 #\x00\x00\x00\x00\x00A\x8a|\x81\xff\x0c\x18\x82\x02 #\x00\x00\x00\x00\x00FJC\xc1\x80\x0c\x18\x82\x02 #\x00\x00\x00\x00\x00H\x898\x00\x80\x0c\x18\x83\x060c\x00\x00\x00\x00\x00S\x08\x87\x00\xc3\x060\x81\x8c8\xc3\x00\x00\x00\x00\x00d\x08\x00\xc0<\x01\xc0\x80p7\x03\x00\x00\x00\x00\x00X\x08p \x00\x00\x00\x00\x000\x00\x00\x00\x00\x00\x00#\x88H \x00\x00\x00\x00\x000\x00\x00\x00\x00\x00\x00L\xb8& \x00\x00\x00\x00\x000\x00\x00\x00\x00\x00\x00\x91P\x11 \x00\x00\x00\x00\x000\x00\x00\x00\x00\x00\x00\xa6\x91\x08\xa0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xc9\x12\x84`\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x12\x12C\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00$\x11 \x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00H\x0c\x90\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00@\x12\x88\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00 \x12F\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x10A\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10  \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08  \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04@@\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xc6\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x008\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
@@ -209,6 +253,10 @@ class Display(Widget):
             pos = self.pos
             pos = (pos[0] + 55, pos[1] + 2)
             Rectangle(texture=texture, pos=pos, size=texture_size)
+
+        # Clear tequnique 2 - not used
+        # with self.canvas.after:    # add '.after' (but not .before)
+        #     Rectangle(texture=texture, pos=self.pos, size=(128, 32))
 
 async def run_app_happily(root, other_task):
     '''This method, which runs Kivy, is run by the asyncio loop as one of the

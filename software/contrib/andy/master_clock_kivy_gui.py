@@ -74,15 +74,17 @@ EuroPiLayout:
         padding: '30dp', '20dp'
         spacing: '20dp'
         Slider:
-            min: 0
-            max: 100
+            id: k1
+            min: 1
+            max: 65535
             value: 50
-            on_value: root.on_slider_value(self)
+            on_value: root.on_slider_value_k1(self)
         Slider:
-            min: 0
-            max: 100
+            id: k2
+            min: 1
+            max: 65535
             value: 50
-            on_value: root.on_slider_value(self)
+            on_value: root.on_slider_value_k2(self)
     BoxLayout:
         size_hint: 1, 0.5
         padding: '130dp', '0dp'
@@ -90,8 +92,12 @@ EuroPiLayout:
         # orientation: 'horizontal' # this breaks the buttons?
         Button:
             text: 'b1'
+            on_press: root.on_button_press_b1(self)
+            on_release: root.on_button_release_b1(self)
         Button:
             text: 'b2'
+            on_press: root.on_button_press_b2(self)
+            on_release: root.on_button_release_b2(self)
     GridLayout:
         cols: 3
         rows: 2
@@ -162,6 +168,10 @@ EuroPiLayout:
 class EuroPiLayout(BoxLayout):
     def __init__(self, **kwargs):
         super(EuroPiLayout, self).__init__(**kwargs)
+
+        b1.pin.value(1) # reverse pin logic high/low/pull stuff
+        b2.pin.value(1) # reverse pin logic high/low/pull stuff
+
         Clock.schedule_interval(self.custom_update, 0.2) # run method every t
 
     def custom_update(self, dt):
@@ -179,10 +189,35 @@ class EuroPiLayout(BoxLayout):
             ref = f'cv{index+1}'
             self.ids[ref].set_state('on' if val != 0 else 'off')
 
-
-    def on_slider_value(self, widget):
+    def on_slider_value_k1(self, widget):
         print(f'Slider value is {int(widget.value)}')
+        k1.pin._pin._value = int(widget.value)
 
+    def on_slider_value_k2(self, widget):
+        print(f'Slider value is {int(widget.value)}')
+        k2.pin._pin._value = int(widget.value)
+
+    def on_button_press_b1(self, widget):
+        print('b1 down')
+        b1.pin.value(0)
+        b1.fake_debounce()
+
+    def on_button_release_b1(self, widget):
+        print('b1 up')
+        b1.pin.value(1)
+        b1.fake_debounce()
+        b1._falling_handler()
+
+    def on_button_press_b2(self, widget):
+        print('b2 down')
+        b2.pin.value(0)
+        b2.fake_debounce()
+
+    def on_button_release_b2(self, widget):
+        print('b2 up')
+        b2.pin.value(1)
+        b2.fake_debounce()
+        b2._falling_handler()
 
 class DebugArea(BoxLayout):
     pass

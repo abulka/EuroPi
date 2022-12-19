@@ -32,27 +32,14 @@ EuroPiLayout:
         Ellipse:
             pos: self.center_x, self.center_y - leds/2
             size: leds, leds
-#:set my_color (.9, .3, .4)
-#:set my_color_hl (.5, .4, .5)
 <CanvasLed>:
-    state: 'normal'
+    state: 'off'
     canvas:
         Color:
-            rgb: my_color if self.state == 'normal' else my_color_hl
+            rgb: (0,1,0) if self.state == 'off' else (1,0,0)
         Ellipse:
             pos: self.center_x, self.center_y - leds/2
             size: leds, leds 
-    # mycolour: 1, 1, 1
-    # mycolour: 'normal'
-    # canvas:
-    #     Color:
-    #         # rgb: root.mycolour
-    #         # rgb: 1, 0, 0
-    #         # rgb: 1, 0, 1 if self.mycolour == 'normal' else 0, 1, 0
-    #         rgb: 0, 0, 1 #if self.mycolour == 'normal' else 0, 1, 0
-    #     Ellipse:
-    #         pos: self.center_x, self.center_y - leds/2
-    #         size: leds, leds 
 <Display>:
     canvas:
         Color:
@@ -103,7 +90,6 @@ EuroPiLayout:
         # orientation: 'horizontal' # this breaks the buttons?
         Button:
             text: 'b1'
-            on_press: print('app', app) # CRASH
         Button:
             text: 'b2'
     GridLayout:
@@ -111,25 +97,15 @@ EuroPiLayout:
         rows: 2
         CanvasLed:
             id: cv1
-            # mycolour: 1, 0, 0
-            # mycolour: 'normalX'
-            # on_touch_down:
-            #     print(self.mycolour)
-            state: 'cv1XXXX'
+            state: 'off'
         CanvasLed:
             id: cv2
-            # mycolour: 'blah'
-            # on_touch_down:
-            #     print(self.mycolour)
         CanvasLed:
             id: cv3
-            state: 'normal'
         CanvasLed:
             id: cv4
-            state: 'XXX'
         CanvasLed:
             id: cv5
-            state: 'on'
         CanvasLed:
             id: cv6
             state: 'on'
@@ -156,9 +132,10 @@ EuroPiLayout:
             Button:
                 text: 'LED'
                 on_press:
-                    print('LED', root.parent.ids.cv1.state)
-                    # root.parent.ids.cv1.state = 'on'
-                    root.parent.ids.cv1.on_state_test(root.parent.ids.cv1, 'on')
+                    cv1 = root.parent.ids.cv1
+                    # print('LED', cv1.state)
+                    # cv1.set_state('on')
+                    cv1.toggle_state()
             Button:
                 text: 'DUMP'
                 on_press:
@@ -191,22 +168,21 @@ class DebugArea(BoxLayout):
 
 class CanvasLed(Widget):
     state = StringProperty()
-    pass
-    # def SetLED(self, color):
-    #     graph = window[key]
-    #     graph.erase()
-    #     graph.draw_circle((0, 0), 12, fill_color=color, line_color=color)
 
     def __init__(self, **kwargs):
         super(CanvasLed, self).__init__(**kwargs)
         Clock.schedule_once(self.after_init) # run method on next frame
 
-    def after_init(self,dt):
-        print('LED:', self.state)
+    def after_init(self, dt):
+        print('after_init LED:', self.state)  # dt might be the time since last frame or something
 
-    def on_state_test(self, instance, value):
-        print('on_state_test', value, self.state, instance)
-        self.state = 'normal'
+    def set_state(self, value):
+        # toggle state
+        # print('LED: set_state from', self.state, '->', value)
+        self.state = value
+
+    def toggle_state(self):
+        self.state = 'on' if self.state == 'off' else 'off'
 
 class CanvasCvIn(Widget):
     pass

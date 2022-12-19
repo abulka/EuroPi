@@ -268,6 +268,11 @@ class Display(Widget):
         fb = FrameBuffer(TH, 128, 32, MONO_HLSB)
         # oled.blit(fb, 0, 0)
 
+        self.image_out(fb)
+
+        self.text_out('Simulator', 55, 2)
+
+    def image_out(self, fb):
         filename = 'software/contrib/andy/temp.xbm'
         convert_to_xbm(fb, filename)
 
@@ -296,27 +301,11 @@ class Display(Widget):
             # pos = (pos[0] + 5, pos[1] + 5)
             Rectangle(texture=texture, pos=pos, size=(128, 32))
 
-        # Drawing text
-
-        mylabel = CoreLabel(text="Simulator", font_size=11, color=(0, 0, 0, 1))
-        # Force refresh to compute things and generate the texture
-        mylabel.refresh()
-        # Get the texture and the texture size
-        texture = mylabel.texture
-        texture_size = list(texture.size)
-        # Draw the texture on any widget canvas
-        # myWidget = self
-        # myWidget.canvas.add(Rectangle(texture=texture, size=texture_size))
-        with self.canvas:
-            pos = self.pos
-            pos = (pos[0] + 55, pos[1] + 2)
-            Rectangle(texture=texture, pos=pos, size=texture_size)
-
-        # Clear tequnique 2 - not used
+        # Clear technique 2 - not used
         # with self.canvas.after:    # add '.after' (but not .before)
         #     Rectangle(texture=texture, pos=self.pos, size=(128, 32))
 
-    def blah(self, text, x, y, colour=None):
+    def text_out(self, text, x, y, colour=None):
         mylabel = CoreLabel(text=text, font_size=10, color=(0, 0, 0, 1))
         # Force refresh to compute things and generate the texture
         mylabel.refresh()
@@ -344,17 +333,16 @@ class Display(Widget):
                 if colour == 88:
                     fill = 'green'
                     font_size = 12
-                self.blah(text, x, y)
+                self.text_out(text, x, y)
             elif command == 'fill':
                 value = params[0]
                 if value == 0:
                     self.clear()
             elif command == 'blit':
                 frame_buffer, x, y = params
-                # filename = 'software/contrib/andy/temp.xbm'
-                # convert_to_xbm(frame_buffer, filename)
-                # canvas.create_bitmap(
-                #     130, 20, bitmap=f'@{filename}', foreground='green')  # WORKS!  🎉
+                self.image_out(frame_buffer)
+                filename = 'software/contrib/andy/temp.xbm'
+                convert_to_xbm(frame_buffer, filename)
             else:
                 print('unknown command', command)
         oled.commands = []

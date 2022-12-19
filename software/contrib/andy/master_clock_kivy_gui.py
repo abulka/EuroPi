@@ -104,12 +104,16 @@ BoxLayout:
         Button:
             text: 'Clear Display'
             on_press:
-                on_press: app.root.ids.disp.clear()
+                on_press: root.ids.disp.clear()
         Button:
-            text: 'test2'
+            text: 'DUMP'
             on_press:
                 # label.text = 'The button was pressed'
-                print('The button was pressed')
+                # print('app', app) # CRASH
+                # print('app.root', app.root) # CRASH
+                print('root.ids', root.ids)
+                print('self.ids', self.ids)
+                print('self.parent.ids', self.parent.ids)
             on_release:
                 # label.text = 'The button was released'
                 print('The button was released')

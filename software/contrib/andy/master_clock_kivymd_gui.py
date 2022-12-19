@@ -1,5 +1,6 @@
 import time
 from io import BytesIO
+import asyncio
 from PIL import Image, ImageOps
 from kivy.lang import Builder
 from kivy.graphics.texture import Texture
@@ -9,9 +10,12 @@ from kivy.core.window import Window
 from kivy.core.image import Image as CoreImage
 from kivy.uix.image import Image as kiImage
 from kivy.graphics.context_instructions import Color 
+from kivy.app import async_runTouchApp
 from kivymd.app import MDApp
 from kivymd.uix.widget import MDWidget
 from europi import FrameBuffer, MONO_HLSB
+from master_clock import MasterClockInner
+from europi import cvs, get_cvs_snapshot_msg, oled, bootsplash, b1, b2, din, k1, k2
 from europi_simulator_util import convert_to_xbm
 
 KV = '''
@@ -195,6 +199,8 @@ class Display(MDWidget):
             Rectangle(texture=texture, pos=pos, size=texture_size)
 
 
+# NON ASYNCIO VERSION
+# 
 class EuroApp(MDApp):
     def build(self):
         return Builder.load_string(KV)
@@ -207,3 +213,41 @@ class EuroApp(MDApp):
 
 Window.size = (450, 700)
 EuroApp().run()
+
+
+
+# ASYNCIO VERSION
+"""
+Is there a KivyMD equivalent to await async_runTouchApp(root,
+async_lib='asyncio') as I am trying to run my KivyMD together with another async
+task. The plain Kivy version works ok but presumably I need a version that
+instantiates a MDApp instead?
+"""
+# async def run_app_happily(root, other_task):
+#     '''This method, which runs Kivy, is run by the asyncio loop as one of the
+#     coroutines.
+#     '''
+#     # we don't actually need to set asyncio as the lib because it is the
+#     # default, but it doesn't hurt to be explicit
+#     await async_runTouchApp(root, async_lib='asyncio')  # run Kivy
+#     print('App done')
+#     # now cancel all the other tasks that may be running
+#     other_task.cancel()
+
+# if __name__ == '__main__':
+#     def root_func():
+#         '''This will run both methods asynchronously and then block until they
+#         are finished
+#         '''
+#         root = Builder.load_string(KV)  # root widget
+#         mc = MasterClockInner()
+#         other_task = asyncio.ensure_future(mc.main())
+
+#         return asyncio.gather(run_app_happily(root, other_task), other_task)
+
+#     loop = asyncio.get_event_loop()
+#     try:
+#         loop.run_until_complete(root_func())
+#     except asyncio.CancelledError as e:
+#         print('Wasting time was canceled', e)
+#     loop.close()

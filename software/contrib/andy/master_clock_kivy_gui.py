@@ -160,8 +160,29 @@ EuroPiLayout:
 '''
 
 class EuroPiLayout(BoxLayout):
+    def __init__(self, **kwargs):
+        super(EuroPiLayout, self).__init__(**kwargs)
+        Clock.schedule_interval(self.custom_update, 0.2) # run method every t
+
+    def custom_update(self, dt):
+        # print('custom_update:', self, self.ids['cv1'])
+        # self.ids['cv1'].toggle_state()
+        self.update_leds()
+
+    def update_leds(self):
+        # make a copy since master clock is updating it
+        cvs_snapshot = [1 if value !=
+                        0 else 0 for value in mc.cvs_snapshot]
+        # window['_cvs_'].update(f'{cvs_snapshot}')
+        # window['_cvs-msg_'].update(f'{get_cvs_snapshot_msg()}')
+        for index, val in enumerate(cvs_snapshot):
+            ref = f'cv{index+1}'
+            self.ids[ref].set_state('on' if val != 0 else 'off')
+
+
     def on_slider_value(self, widget):
         print(f'Slider value is {int(widget.value)}')
+
 
 class DebugArea(BoxLayout):
     pass
@@ -277,13 +298,14 @@ async def waste_time_freely():
         print('Done wasting time')
 
 if __name__ == '__main__':
+    mc = MasterClockInner()
+
     def root_func():
         '''This will run both methods asynchronously and then block until they
         are finished
         '''
         root = Builder.load_string(kv)  # root widget
         # other_task = asyncio.ensure_future(waste_time_freely())
-        mc = MasterClockInner()
         other_task = asyncio.ensure_future(mc.main())
 
         return asyncio.gather(run_app_happily(root, other_task), other_task)

@@ -15,6 +15,8 @@ from kivy.graphics import Rectangle
 from kivy.core.image import Image as CoreImage
 from kivy.core.text import Label as CoreLabel
 from kivy.graphics.context_instructions import Color 
+from kivy.properties import StringProperty
+from kivy.clock import Clock
 from europi_simulator_util import convert_to_xbm
 from europi import FrameBuffer, MONO_HLSB
 
@@ -30,7 +32,7 @@ EuroPiLayout:
         Ellipse:
             pos: self.center_x, self.center_y - leds/2
             size: leds, leds
-#:set my_color (.4, .3, .4)
+#:set my_color (.9, .3, .4)
 #:set my_color_hl (.5, .4, .5)
 <CanvasLed>:
     state: 'normal'
@@ -113,7 +115,7 @@ EuroPiLayout:
             # mycolour: 'normalX'
             # on_touch_down:
             #     print(self.mycolour)
-            state: 'XXXX'
+            state: 'cv1XXXX'
         CanvasLed:
             id: cv2
             # mycolour: 'blah'
@@ -154,7 +156,9 @@ EuroPiLayout:
             Button:
                 text: 'LED'
                 on_press:
-                    on_press: root.parent.ids.cv1.mycolour = 1, 0, 0
+                    print('LED', root.parent.ids.cv1.state)
+                    # root.parent.ids.cv1.state = 'on'
+                    root.parent.ids.cv1.on_state_test(root.parent.ids.cv1, 'on')
             Button:
                 text: 'DUMP'
                 on_press:
@@ -186,11 +190,23 @@ class DebugArea(BoxLayout):
     pass
 
 class CanvasLed(Widget):
+    state = StringProperty()
     pass
     # def SetLED(self, color):
     #     graph = window[key]
     #     graph.erase()
     #     graph.draw_circle((0, 0), 12, fill_color=color, line_color=color)
+
+    def __init__(self, **kwargs):
+        super(CanvasLed, self).__init__(**kwargs)
+        Clock.schedule_once(self.after_init) # run method on next frame
+
+    def after_init(self,dt):
+        print('LED:', self.state)
+
+    def on_state_test(self, instance, value):
+        print('on_state_test', value, self.state, instance)
+        self.state = 'normal'
 
 class CanvasCvIn(Widget):
     pass

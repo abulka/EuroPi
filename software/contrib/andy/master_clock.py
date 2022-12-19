@@ -456,12 +456,12 @@ class MasterClockInner(EuroPiScript):
                 # the snapshot should correspond to cvs_snapshot_msg
                 # print(f'cvs_snapshot: {self.cvs_snapshot}', 'cvs_snapshot_msg: ', get_cvs_snapshot_msg())
 
-                await asyncio.sleep_ms(400)  # ANDY slow down the clock
+                # await asyncio.sleep_ms(400)  # ANDY slow down the clock
                 # ANDY this is the original code
-                # if self.configMode:
-                #     await asyncio.sleep_ms(int(self.mSBetweenClockCycles - self.msDriftCompensation - self.msDriftCompensationConfigMode))
-                # else:
-                #     await asyncio.sleep_ms(int(self.mSBetweenClockCycles - self.msDriftCompensation))
+                if self.configMode:
+                    await asyncio.sleep_ms(int(self.mSBetweenClockCycles - self.msDriftCompensation - self.msDriftCompensationConfigMode))
+                else:
+                    await asyncio.sleep_ms(int(self.mSBetweenClockCycles - self.msDriftCompensation))
             else:
                 # need to add this otherwise the async tasks never start
                 await asyncio.sleep_ms(0)

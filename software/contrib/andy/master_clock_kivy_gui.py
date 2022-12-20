@@ -212,40 +212,30 @@ class EuroPiLayout(BoxLayout):
         # print('custom_update:', self, self.ids['cv1'])
         # self.ids['cv1'].toggle_state()
         self.update_leds()
-        
-        display_widget = self.ids['disp']
+        self.ids['disp'].update_display()  # tell display_widget to update
 
-        # x = random.randint(0, 100)
-        # y = random.randint(0, 20)
-        # display_widget.blah('fred', x, y)
+    async def led88(self):
+        for ids in range(6):
+            self.ids['cv'+str(ids+1)].toggle_state()
+            # self.ids['cv'+str(ids+1)].set_state('on')
+        await asyncio.sleep(.4)
+        for ids in range(6):
+            self.ids['cv'+str(ids+1)].set_state('off')
+        await asyncio.sleep(0.4)
 
-        display_widget.update_display()
-
-
-    def update_leds(self):
-
-        # t1 = get_cvs_snapshot_time()
-        # t2 = ticks_ms()
-        # tdiff = ticks_diff(t2, t1)
-        # print('update_leds', tdiff, 'ms')
-
-        if len(get_cvs_snapshot()) == 0:
-            # print('no cvs_snapshot')
-            return
-        else:
-            # print('cvs_snapshot', get_cvs_snapshot())
-            pass
-
-        # make a copy since master clock is updating it
-        cvs_snapshot = [1 if value !=
-                        # 0 else 0 for value in mc.cvs_snapshot]
-                        0 else 0 for value in get_cvs_snapshot()]
+    async def led77(self, cvs_snapshot):
+        # # make a copy since master clock is updating it
+        # cvs_snapshot = [1 if value !=
+        #                 # 0 else 0 for value in mc.cvs_snapshot]
+        #                 0 else 0 for value in get_cvs_snapshot()]
         # window['_cvs_'].update(f'{cvs_snapshot}')
         # window['_cvs-msg_'].update(f'{get_cvs_snapshot_msg()}')
         for index, val in enumerate(cvs_snapshot):
             ref = f'cv{index+1}'
             new_state = 'on' if val != 0 else 'off'
             self.ids[ref].set_state(new_state)
+
+            # Sounds
             if (new_state == 'on' and self.play_sounds):
                 if (ref == 'cv1'):
                     # sound1.play()
@@ -260,7 +250,58 @@ class EuroPiLayout(BoxLayout):
                     sound5.play()
                 elif (ref == 'cv6'):
                     sound6.play()
-        clear_cvs_snapshot()
+
+        await asyncio.sleep(.4)
+
+        for ids in range(6):
+            self.ids['cv'+str(ids+1)].set_state('off')
+        await asyncio.sleep(0.4)
+        
+        # clear_cvs_snapshot()
+
+    def update_leds(self):
+
+        # t1 = get_cvs_snapshot_time()
+        # t2 = ticks_ms()
+        # tdiff = ticks_diff(t2, t1)
+        # print('update_leds', tdiff, 'ms')
+
+        if len(get_cvs_snapshot()) == 0:
+            # print('no cvs_snapshot')
+            return
+        else:
+            # print('cvs_snapshot', get_cvs_snapshot())
+            pass
+            # asyncio.create_task(self.led88())
+            asyncio.create_task(self.led77(get_cvs_snapshot()))
+            clear_cvs_snapshot()
+            return
+
+        # # make a copy since master clock is updating it
+        # cvs_snapshot = [1 if value !=
+        #                 # 0 else 0 for value in mc.cvs_snapshot]
+        #                 0 else 0 for value in get_cvs_snapshot()]
+        # # window['_cvs_'].update(f'{cvs_snapshot}')
+        # # window['_cvs-msg_'].update(f'{get_cvs_snapshot_msg()}')
+        # for index, val in enumerate(cvs_snapshot):
+        #     ref = f'cv{index+1}'
+        #     new_state = 'on' if val != 0 else 'off'
+        #     self.ids[ref].set_state(new_state)
+        #     if (new_state == 'on' and self.play_sounds):
+        #         if (ref == 'cv1'):
+        #             # sound1.play()
+        #             pass
+        #         elif (ref == 'cv2'):
+        #             sound2.play()
+        #         elif (ref == 'cv3'):
+        #             sound3.play()
+        #         elif (ref == 'cv4'):
+        #             sound4.play()
+        #         elif (ref == 'cv5'):
+        #             sound5.play()
+        #         elif (ref == 'cv6'):
+        #             sound6.play()
+        # clear_cvs_snapshot()
 
     def on_checkbox_click(self, widget):
         print(f'Checkbox value is {widget.active}')

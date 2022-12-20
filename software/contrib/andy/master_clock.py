@@ -325,14 +325,9 @@ class MasterClockInner(EuroPiScript):
         from machine import gpio_pin_to_europi_cvout
         # print(f' pulse to {gpio_pin_to_europi_cvout[cv.pin._pin._id]} ✨')
         cv.voltage(5)
-        self.cvs_snapshot = [1 if cv.pin._pin.value() else 0 for cv in cvs]  # for display
         display(self.step)
         await asyncio.sleep_ms(self.pulseWidthMs)
         cv.off()
-
-        # self.cvs_snapshot = [1 if cv.pin._pin.value() else 0 for cv in cvs]  # for display
-        # the snapshot should correspond to cvs_snapshot_msg
-        # print(f'cvs_snapshot: {self.cvs_snapshot}', 'cvs_snapshot_msg: ', get_cvs_snapshot_msg())
 
     ''' Given a desired BPM, calculate the time to sleep between clock pulses '''
     def calcSleepTime(self):

@@ -9,7 +9,8 @@ from io import BytesIO
 from kivy.app import async_runTouchApp
 from kivy.lang.builder import Builder
 from master_clock import MasterClockInner
-from europi import cvs, get_cvs_snapshot_msg, oled, bootsplash, b1, b2, din, k1, k2
+from europi import cvs, oled, bootsplash, b1, b2, din, k1, k2
+from europi import get_cvs_snapshot_msg, get_cvs_snapshot
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
 from kivy.graphics.texture import Texture
@@ -224,7 +225,8 @@ class EuroPiLayout(BoxLayout):
     def update_leds(self):
         # make a copy since master clock is updating it
         cvs_snapshot = [1 if value !=
-                        0 else 0 for value in mc.cvs_snapshot]
+                        # 0 else 0 for value in mc.cvs_snapshot]
+                        0 else 0 for value in get_cvs_snapshot()]
         # window['_cvs_'].update(f'{cvs_snapshot}')
         # window['_cvs-msg_'].update(f'{get_cvs_snapshot_msg()}')
         for index, val in enumerate(cvs_snapshot):

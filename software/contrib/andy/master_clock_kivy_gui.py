@@ -20,9 +20,9 @@ from kivy.clock import Clock
 from kivy.core.audio import SoundLoader
 from master_clock import MasterClockInner
 from europi import cvs, oled, bootsplash, b1, b2, din, k1, k2
-from europi import FrameBuffer, MONO_HLSB
+from europi import FrameBuffer, MONO_HLSB, ticks_ms, ticks_diff
 from europi_simulator_util import convert_to_xbm
-from europi_simulator_util import get_cvs_snapshot_msg, get_cvs_snapshot
+from europi_simulator_util import get_cvs_snapshot_msg, get_cvs_snapshot, get_cvs_snapshot_time
 
 kv = '''
 # MainThing:
@@ -223,6 +223,11 @@ class EuroPiLayout(BoxLayout):
 
 
     def update_leds(self):
+        t1 = get_cvs_snapshot_time()
+        t2 = ticks_ms()
+        tdiff = ticks_diff(t2, t1)
+        print('update_leds', tdiff, 'ms')
+
         # make a copy since master clock is updating it
         cvs_snapshot = [1 if value !=
                         # 0 else 0 for value in mc.cvs_snapshot]

@@ -29,12 +29,15 @@ cvs_snapshot_msg = ''
 cvs_snapshot_msg_last_tick = ''
 cvs_last_tick = 0
 cvs_snapshot = []
+cvs_snapshot_time = 0
 
 def get_cvs_snapshot_msg():
     return cvs_snapshot_msg
 
 def get_cvs_snapshot():
     return cvs_snapshot
+def get_cvs_snapshot_time():
+    return cvs_snapshot_time
 
 def display(tick=0):
     """We get a number of calls here with the same tick value, so we only print when the tick changes.
@@ -42,11 +45,12 @@ def display(tick=0):
     global cvs_snapshot_msg
     global cvs_last_tick
     global cvs_snapshot_msg_last_tick
-    global cvs_snapshot
+    global cvs_snapshot, cvs_snapshot_time
     same_line_print = True
 
     # pure
     cvs_snapshot = [1 if cv.pin._pin.value() else 0 for cv in cvs]  # for display
+    cvs_snapshot_time = ticks_ms()
 
     cvs_snapshot_msg = f'tick:{tick:0>2} time:{ticks_ms():0>6} '
     for index, value in enumerate(cvs):

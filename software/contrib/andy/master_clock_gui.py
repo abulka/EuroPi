@@ -6,8 +6,8 @@ import random
 import PySimpleGUI as sg  # pip install PySimpleGUI
 from master_clock import MasterClockInner
 from europi import cvs, oled, bootsplash, b1, b2, din, k1, k2
-from europi import get_cvs_snapshot_msg, get_cvs_snapshot
 from europi_simulator_util import convert_to_xbm
+from europi_simulator_util import get_cvs_snapshot_msg, get_cvs_snapshot
 
 sg.theme('SystemDefaultForReal')  # better looking buttons
 

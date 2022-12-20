@@ -8,9 +8,6 @@ from PIL import Image, ImageOps
 from io import BytesIO
 from kivy.app import async_runTouchApp
 from kivy.lang.builder import Builder
-from master_clock import MasterClockInner
-from europi import cvs, oled, bootsplash, b1, b2, din, k1, k2
-from europi import get_cvs_snapshot_msg, get_cvs_snapshot
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
 from kivy.graphics.texture import Texture
@@ -21,8 +18,11 @@ from kivy.graphics.context_instructions import Color
 from kivy.properties import StringProperty
 from kivy.clock import Clock
 from kivy.core.audio import SoundLoader
-from europi_simulator_util import convert_to_xbm
+from master_clock import MasterClockInner
+from europi import cvs, oled, bootsplash, b1, b2, din, k1, k2
 from europi import FrameBuffer, MONO_HLSB
+from europi_simulator_util import convert_to_xbm
+from europi_simulator_util import get_cvs_snapshot_msg, get_cvs_snapshot
 
 kv = '''
 # MainThing:

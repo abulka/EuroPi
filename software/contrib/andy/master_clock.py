@@ -3,6 +3,7 @@ import sys
 sys.path.append('stubs')
 
 from europi import *
+from europi_simulator_util import display
 import machine
 
 # from time import ticks_diff, ticks_ms  # ANDY

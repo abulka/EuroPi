@@ -5,6 +5,13 @@ import time
 from master_clock import MasterClockInner
 from europi import cvs, get_cvs_snapshot_msg, oled, bootsplash, b1, b2, din, k1, k2
 
+"""
+CLI based simulator for MasterClockInner
+
+Press q ENTER to quit
+Press s ENTER to stop/start master clock
+"""
+
 class Prompt:
     def __init__(self, loop=None):
         self.loop = loop or asyncio.get_event_loop()
@@ -28,7 +35,7 @@ async def heartbeat():
         start = time.time()
         await asyncio.sleep(1)
         delay = time.time() - start - 1
-        print(f'heartbeat delay = {delay:.3f}s')
+        print(f'\n\t\t\t\t\t\t\t\t\t\t\theartbeat delay = {delay:.3f}s')
 
 async def user_prompter():
     while True:
@@ -41,6 +48,18 @@ async def user_prompter():
             # for task in asyncio.Task.all_tasks():
             #     task.cancel()
             exit()
+
+async def fake_display():
+    while True:
+        if oled.flush_to_ui:
+            cmds = oled.commands.copy()
+            print('fake_display', len(cmds), 'commands')
+            if (len(cmds) > 100):
+                print('too many commands', len(cmds))
+                raise Exception('too many commands')
+            oled.commands = []
+            oled.flush_to_ui = False
+        await asyncio.sleep(2.1)
 
 async def user_prompt_stop_start_mc():
     while True:
@@ -67,9 +86,10 @@ def root_func():
     # task1 = asyncio.ensure_future(user_prompter())
     task1 = asyncio.ensure_future(user_prompt_stop_start_mc())
     task2 = asyncio.ensure_future(heartbeat())
-    task3 = asyncio.ensure_future(mc.main())
+    task3 = asyncio.ensure_future(fake_display())
+    task4 = asyncio.ensure_future(mc.main())
 
-    return asyncio.gather(task1, task2, task3)
+    return asyncio.gather(task1, task2, task3, task4)
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(root_func())

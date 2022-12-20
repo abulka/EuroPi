@@ -174,7 +174,7 @@ class EuroPiLayout(BoxLayout):
         b1.pin.value(1) # reverse pin logic high/low/pull stuff
         b2.pin.value(1) # reverse pin logic high/low/pull stuff
 
-        Clock.schedule_interval(self.custom_update, 0.2) # run method every t
+        Clock.schedule_interval(self.custom_update, .1) # run method every t
 
     def custom_update(self, dt):
         # print('custom_update:', self, self.ids['cv1'])
@@ -307,6 +307,8 @@ class Display(Widget):
         #     Rectangle(texture=texture, pos=self.pos, size=(128, 32))
 
     def text_out(self, text, x, y, colour=None):
+        # print('text', text, x, y, colour)
+        # return
         mylabel = CoreLabel(text=text, font_size=10, color=(0, 0, 0, 1))
         # Force refresh to compute things and generate the texture
         mylabel.refresh()
@@ -326,11 +328,20 @@ class Display(Widget):
             return
         
         # ignore screen
-        oled.commands = []
-        oled.flush_to_ui = False
-        return
+        # oled.commands = []
+        # oled.flush_to_ui = False
+        # return
 
-        for cmd in oled.commands:
+        cmds = oled.commands.copy()
+        print('update_display', len(cmds), 'commands')
+        if (len(cmds) > 1_000):
+            print('too many commands', len(cmds))
+            # for cmd in cmds:
+            #     print(cmd)
+            raise Exception('too many commands')
+
+        # for cmd in oled.commands:
+        for cmd in cmds:
             command = cmd[0]
             params = cmd[1]
             if command == 'text':
@@ -340,6 +351,8 @@ class Display(Widget):
                 if colour == 88:
                     fill = 'green'
                     font_size = 12
+                # print('text', text, x, y, colour)
+                # break # calling the next line causes the async problem
                 self.text_out(text, x, y)
             elif command == 'fill':
                 value = params[0]

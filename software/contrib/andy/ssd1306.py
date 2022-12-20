@@ -56,6 +56,8 @@ class SSD1306_I2C(object):
         if txt == version_str:
             colour = 88  # ANDY just my convention for green, I don't know what the real colour values are
         self.commands.append(('text', (txt, x, y, colour)))
+        if (len(self.commands) > 50):
+            raise Exception(f'Too many commands {len(self.commands)}')
 
     def show(self):
         logging.debug('Showing on lcd')
@@ -63,7 +65,14 @@ class SSD1306_I2C(object):
 
     def fill(self, value):
         logging.debug('Fill with %s' % value)
+
+        # Extra optimisation: if we have a fill command, we can remove all the other previous commands
+        self.commands = [] # tuple of (cmd, params)
+
         self.commands.append(('fill', (value,)))
+        # print('At time of fill, commands are', len(self.commands))
+        
+        # self.flush_to_ui = False
 
     def invert(self, invert):
         logging.debug('Inverting pixels')

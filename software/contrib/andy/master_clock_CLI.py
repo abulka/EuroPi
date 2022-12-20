@@ -3,7 +3,8 @@ import functools
 import asyncio
 import time
 from master_clock import MasterClockInner
-from europi import cvs, get_cvs_snapshot_msg, oled, bootsplash, b1, b2, din, k1, k2
+from europi import cvs, oled, bootsplash, b1, b2, din, k1, k2
+from europi_simulator_util import get_cvs_snapshot_msg
 
 """
 CLI based simulator for MasterClockInner

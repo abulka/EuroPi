@@ -7,7 +7,7 @@ import PySimpleGUI as sg  # pip install PySimpleGUI
 from master_clock import MasterClockInner
 from europi import cvs, oled, bootsplash, b1, b2, din, k1, k2
 from europi_simulator_util import convert_to_xbm
-from europi_simulator_util import get_cvs_snapshot_msg, get_cvs_snapshot
+from europi_simulator_util import get_cvs_snapshot_msg, get_cvs_snapshot, clear_cvs_snapshot
 
 sg.theme('SystemDefaultForReal')  # better looking buttons
 
@@ -125,14 +125,16 @@ async def gui_window_loop():
             # same timing as the EuroPi clock. So unfortunately 
             # some leds stay on permanently e.g. cv1.
 
-            # make a copy since master clock is updating it
-            cvs_snapshot = [1 if value !=
-                            0 else 0 for value in get_cvs_snapshot()]
-            # window['_cvs_'].update(f'{cvs_snapshot}')
-            # window['_cvs-msg_'].update(f'{get_cvs_snapshot_msg()}')
-            for index, values in enumerate(cvs_snapshot):
-                ref = f'_cv{index+1}_'
-                SetLED(window, ref, 'red' if values != 0 else 'green')
+            if len(get_cvs_snapshot()) != 0:
+                # make a copy since master clock is updating it
+                cvs_snapshot = [1 if value !=
+                                0 else 0 for value in get_cvs_snapshot()]
+                # window['_cvs_'].update(f'{cvs_snapshot}')
+                # window['_cvs-msg_'].update(f'{get_cvs_snapshot_msg()}')
+                for index, values in enumerate(cvs_snapshot):
+                    ref = f'_cv{index+1}_'
+                    SetLED(window, ref, 'red' if values != 0 else 'green')
+                clear_cvs_snapshot()
 
         # Fake button up events, if got to here then no button was pressed
         if event != "b1" and values_last['b1'] == 'down':

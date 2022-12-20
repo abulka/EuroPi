@@ -22,7 +22,7 @@ from master_clock import MasterClockInner
 from europi import cvs, oled, bootsplash, b1, b2, din, k1, k2
 from europi import FrameBuffer, MONO_HLSB, ticks_ms, ticks_diff
 from europi_simulator_util import convert_to_xbm
-from europi_simulator_util import get_cvs_snapshot_msg, get_cvs_snapshot, get_cvs_snapshot_time
+from europi_simulator_util import get_cvs_snapshot_msg, get_cvs_snapshot, get_cvs_snapshot_time, clear_cvs_snapshot
 
 kv = '''
 # MainThing:
@@ -223,10 +223,18 @@ class EuroPiLayout(BoxLayout):
 
 
     def update_leds(self):
-        t1 = get_cvs_snapshot_time()
-        t2 = ticks_ms()
-        tdiff = ticks_diff(t2, t1)
-        print('update_leds', tdiff, 'ms')
+
+        # t1 = get_cvs_snapshot_time()
+        # t2 = ticks_ms()
+        # tdiff = ticks_diff(t2, t1)
+        # print('update_leds', tdiff, 'ms')
+
+        if len(get_cvs_snapshot()) == 0:
+            # print('no cvs_snapshot')
+            return
+        else:
+            # print('cvs_snapshot', get_cvs_snapshot())
+            pass
 
         # make a copy since master clock is updating it
         cvs_snapshot = [1 if value !=
@@ -252,6 +260,7 @@ class EuroPiLayout(BoxLayout):
                     sound5.play()
                 elif (ref == 'cv6'):
                     sound6.play()
+        clear_cvs_snapshot()
 
     def on_checkbox_click(self, widget):
         print(f'Checkbox value is {widget.active}')

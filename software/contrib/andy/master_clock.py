@@ -438,6 +438,7 @@ class MasterClockInner(EuroPiScript):
                 if self.screen == 1:
                     self.screen1()
                 else:
+                    pass
                     self.screen2()
 
             # Auto reset function after resetTimeout
@@ -465,6 +466,7 @@ class MasterClockInner(EuroPiScript):
             else:
                 # need to add this otherwise the async tasks never start
                 await asyncio.sleep_ms(0)
+                print('.', end='')
 
 class MasterClock(EuroPiScript):
     def __init__(self):

@@ -3,6 +3,7 @@ in asyncio event loop as just another async coroutine.
 '''
 import asyncio
 import random
+import time
 from PIL import Image, ImageOps
 from io import BytesIO
 from kivy.app import async_runTouchApp
@@ -323,6 +324,12 @@ class Display(Widget):
     def update_display(self):
         if not oled.flush_to_ui:
             return
+        
+        # ignore screen
+        oled.commands = []
+        oled.flush_to_ui = False
+        return
+
         for cmd in oled.commands:
             command = cmd[0]
             params = cmd[1]
@@ -374,6 +381,13 @@ async def waste_time_freely():
         # when canceled, print that it finished
         print('Done wasting time')
 
+async def heartbeat():
+    while True:
+        start = time.time()
+        await asyncio.sleep(1)
+        delay = time.time() - start - 1
+        print(f'heartbeat delay = {delay:.3f}s')
+
 if __name__ == '__main__':
     mc = MasterClockInner()
 
@@ -384,8 +398,10 @@ if __name__ == '__main__':
         root = Builder.load_string(kv)  # root widget
         # other_task = asyncio.ensure_future(waste_time_freely())
         other_task = asyncio.ensure_future(mc.main())
+        heartbeat_task = asyncio.ensure_future(heartbeat())
 
-        return asyncio.gather(run_app_happily(root, other_task), other_task)
+        # return asyncio.gather(run_app_happily(root, other_task), other_task)
+        return asyncio.gather(run_app_happily(root, other_task), other_task, heartbeat_task)
 
     loop = asyncio.get_event_loop()
     try:

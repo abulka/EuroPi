@@ -307,8 +307,6 @@ class Display(Widget):
         #     Rectangle(texture=texture, pos=self.pos, size=(128, 32))
 
     def text_out(self, text, x, y, colour=None):
-        # print('text', text, x, y, colour)
-        # return
         mylabel = CoreLabel(text=text, font_size=10, color=(0, 0, 0, 1))
         # Force refresh to compute things and generate the texture
         mylabel.refresh()
@@ -324,23 +322,14 @@ class Display(Widget):
             Rectangle(texture=texture, pos=pos, size=texture_size)
 
     def update_display(self):
+        if (len(oled.commands) > 1_000):
+            raise Exception(f'Too many commands {len(oled.commands)}')
+
         if not oled.flush_to_ui:
             return
         
-        # ignore screen
-        # oled.commands = []
-        # oled.flush_to_ui = False
-        # return
-
         cmds = oled.commands.copy()
-        print('update_display', len(cmds), 'commands')
-        if (len(cmds) > 1_000):
-            print('too many commands', len(cmds))
-            # for cmd in cmds:
-            #     print(cmd)
-            raise Exception('too many commands')
-
-        # for cmd in oled.commands:
+        # print('************************** update_display', len(cmds), 'commands')
         for cmd in cmds:
             command = cmd[0]
             params = cmd[1]
@@ -399,7 +388,7 @@ async def heartbeat():
         start = time.time()
         await asyncio.sleep(1)
         delay = time.time() - start - 1
-        print(f'heartbeat delay = {delay:.3f}s')
+        # print(f'heartbeat delay = {delay:.3f}s')
 
 if __name__ == '__main__':
     mc = MasterClockInner()

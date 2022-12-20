@@ -440,7 +440,6 @@ class MasterClockInner(EuroPiScript):
                 else:
                     pass
                     self.screen2()
-                    # await asyncio.sleep_ms(10)
 
             # Auto reset function after resetTimeout
             if self.step != 0 and ticks_diff(ticks_ms(), self.previousStepTime) > self.resetTimeout:
@@ -466,9 +465,8 @@ class MasterClockInner(EuroPiScript):
                     await asyncio.sleep_ms(int(self.mSBetweenClockCycles - self.msDriftCompensation))
             else:
                 # need to add this otherwise the async tasks never start
-                # await asyncio.sleep_ms(0) # ORIGINAL - doesn't let UI task run
-                await asyncio.sleep_ms(10) # FIX - allows UI task to run
-                print('.', end='')
+                await asyncio.sleep_ms(0)
+                # print('.', end='')
 
 class MasterClock(EuroPiScript):
     def __init__(self):

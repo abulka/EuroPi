@@ -591,17 +591,37 @@ reset_state()
 
 # ANDY EXTRAS
 
-cvs_snapshot_msg = 'X'
+cvs_snapshot_msg = ''
+cvs_snapshot_msg_last_tick = ''
+cvs_last_tick = 0
+
 def get_cvs_snapshot_msg():
     return cvs_snapshot_msg
+
 def display(tick=0):
     global cvs_snapshot_msg
-    # cvs_snapshot_msg = f'{tick:0>2} '
-    cvs_snapshot_msg = ''
+    global cvs_last_tick
+    global cvs_snapshot_msg_last_tick
+    same_line_print = True
+
+    cvs_snapshot_msg = f'tick:{tick:0>2} time:{ticks_ms():0>6} '
+    # cvs_snapshot_msg = ''
+    
     for index, value in enumerate(cvs):
         cvs_snapshot_msg += f'{index+1 if value.pin._pin.value() else " "}'
+
+    if tick != cvs_last_tick and cvs_snapshot_msg_last_tick != '':
+        # cvs_snapshot_msg += f' tick change {tick:0>2} != {cvs_last_tick:0>2}'
+        if same_line_print:
+            print(f'\r{cvs_snapshot_msg_last_tick}', end='', flush=True)  # print on the same line
+        else:
+            print(cvs_snapshot_msg_last_tick)
     
-    # print(msg)
-    print(f'\r{cvs_snapshot_msg}', end='', flush=True)  # print on the same line
+    # print(tick, ticks_ms(), cvs_snapshot_msg)
+    # print(cvs_snapshot_msg)
+    # print(f'\r{cvs_snapshot_msg}', end='', flush=True)  # print on the same line
     # all_messages.append(msg)
 
+    cvs_last_tick = tick
+    cvs_snapshot_msg_last_tick = cvs_snapshot_msg
+    

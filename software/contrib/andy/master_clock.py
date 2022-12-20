@@ -325,7 +325,7 @@ class MasterClockInner(EuroPiScript):
         from machine import gpio_pin_to_europi_cvout
         # print(f' pulse to {gpio_pin_to_europi_cvout[cv.pin._pin._id]} ✨')
         cv.voltage(5)
-        display(99)
+        display(self.step)
         await asyncio.sleep_ms(self.pulseWidthMs)
         cv.off()
 
@@ -430,7 +430,7 @@ class MasterClockInner(EuroPiScript):
     async def main(self):
         # ANDY - just for fun display the EuroPi bootsplash
         bootsplash()
-        await asyncio.sleep_ms(1500)
+        await asyncio.sleep_ms(500)
 
         while True:
             if not self.clockSelectionScreenActive:

@@ -251,11 +251,11 @@ class EuroPiLayout(BoxLayout):
         self.play_sounds = widget.active
 
     def on_slider_value_k1(self, widget):
-        print(f'Slider value is {int(widget.value)}')
+        # print(f'Slider value is {int(widget.value)}')
         k1.pin._pin._value = int(widget.value)
 
     def on_slider_value_k2(self, widget):
-        print(f'Slider value is {int(widget.value)}')
+        # print(f'Slider value is {int(widget.value)}')
         k2.pin._pin._value = int(widget.value)
 
     def on_button_press_b1(self, widget):
@@ -305,6 +305,10 @@ class CanvasCvIn(Widget):
     pass
 
 class Display(Widget):
+    def __init__(self, **kwargs):
+        super(Display, self).__init__(**kwargs)
+        self.cmd_last = []
+
     def clear(self):
         with self.canvas:
             Color(rgba=(1,1,1,1))
@@ -379,31 +383,37 @@ class Display(Widget):
             return
         
         cmds = oled.commands.copy()
-        # print('************************** update_display', len(cmds), 'commands')
-        for cmd in cmds:
-            command = cmd[0]
-            params = cmd[1]
-            if command == 'text':
-                text, x, y, colour = params
-                font_size = 14
-                fill = 'black'
-                if colour == 88:
-                    fill = 'green'
-                    font_size = 12
-                # print('text', text, x, y, colour)
-                # break # calling the next line causes the async problem
-                self.text_out(text, x, y)
-            elif command == 'fill':
-                value = params[0]
-                if value == 0:
-                    self.clear()
-            elif command == 'blit':
-                frame_buffer, x, y = params
-                self.image_out(frame_buffer)
-                filename = 'software/contrib/andy/temp.xbm'
-                convert_to_xbm(frame_buffer, filename)
-            else:
-                print('unknown command', command)
+        if cmds != self.cmd_last:
+            # print('************************** update_display', len(cmds), 'commands')
+            for cmd in cmds:
+                command = cmd[0]
+                params = cmd[1]
+                if command == 'text':
+                    text, x, y, colour = params
+                    font_size = 14
+                    fill = 'black'
+                    if colour == 88:
+                        fill = 'green'
+                        font_size = 12
+                    # print('text', text, x, y, colour)
+                    # break # calling the next line causes the async problem
+                    self.text_out(text, x, y)
+                elif command == 'fill':
+                    value = params[0]
+                    if value == 0:
+                        self.clear()
+                elif command == 'blit':
+                    frame_buffer, x, y = params
+                    self.image_out(frame_buffer)
+                    filename = 'software/contrib/andy/temp.xbm'
+                    convert_to_xbm(frame_buffer, filename)
+                else:
+                    print('unknown command', command)
+        else:
+            pass
+            # print('Display - No change')
+
+        self.cmd_last = cmds.copy()
         oled.commands = []
         oled.flush_to_ui = False
 

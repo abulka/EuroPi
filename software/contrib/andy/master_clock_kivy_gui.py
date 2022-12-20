@@ -19,6 +19,7 @@ from kivy.core.text import Label as CoreLabel
 from kivy.graphics.context_instructions import Color 
 from kivy.properties import StringProperty
 from kivy.clock import Clock
+from kivy.core.audio import SoundLoader
 from europi_simulator_util import convert_to_xbm
 from europi import FrameBuffer, MONO_HLSB
 
@@ -167,6 +168,13 @@ EuroPiLayout:
                 text: 'Button is "{}"'.format(btn.state)
 '''
 
+sound1 = SoundLoader.load('sounds/wav1.wav')
+sound2 = SoundLoader.load('sounds/wav2.wav')
+sound3 = SoundLoader.load('sounds/wav3.wav')
+sound4 = SoundLoader.load('sounds/wav4.wav')
+sound5 = SoundLoader.load('sounds/wav1.wav')
+sound6 = SoundLoader.load('sounds/wav2.wav')
+
 class EuroPiLayout(BoxLayout):
     def __init__(self, **kwargs):
         super(EuroPiLayout, self).__init__(**kwargs)
@@ -198,7 +206,22 @@ class EuroPiLayout(BoxLayout):
         # window['_cvs-msg_'].update(f'{get_cvs_snapshot_msg()}')
         for index, val in enumerate(cvs_snapshot):
             ref = f'cv{index+1}'
-            self.ids[ref].set_state('on' if val != 0 else 'off')
+            new_state = 'on' if val != 0 else 'off'
+            self.ids[ref].set_state(new_state)
+            if (new_state == 'on'):
+                if (ref == 'cv1'):
+                    # sound1.play()
+                    pass
+                elif (ref == 'cv2'):
+                    sound2.play()
+                elif (ref == 'cv3'):
+                    sound3.play()
+                elif (ref == 'cv4'):
+                    sound4.play()
+                elif (ref == 'cv5'):
+                    sound5.play()
+                elif (ref == 'cv6'):
+                    sound6.play()
 
     def on_slider_value_k1(self, widget):
         print(f'Slider value is {int(widget.value)}')

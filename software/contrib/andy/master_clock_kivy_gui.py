@@ -27,6 +27,10 @@ kv = '''
 # MainThing:
 EuroPiLayout:
 
+# giving colour to label
+<CustLabel@Label>:
+    color: 'grey'
+
 #:set leds dp(20)
 <CanvasCvIn>:
     canvas:
@@ -162,6 +166,25 @@ EuroPiLayout:
             Button:
                 id: btn
                 text: 'Press me'
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint: 0.5, 1.5
+                CustLabel:
+                    text: "Sounds"
+                CheckBox:
+                    canvas.before:
+                        Color:
+                            rgb: 0.5, 0.5, 0.5
+                        Rectangle:
+                            pos:self.center_x-8, self.center_y-8
+                            size:[16,16]
+                        Color:
+                            rgb: 0,0,0
+                        Rectangle:
+                            pos:self.center_x-7, self.center_y-7
+                            size:[14,14]
+                    active: False
+                    on_active: root.parent.on_checkbox_click(self)
         BoxLayout:
             Label:
                 id: label
@@ -181,7 +204,7 @@ class EuroPiLayout(BoxLayout):
 
         b1.pin.value(1) # reverse pin logic high/low/pull stuff
         b2.pin.value(1) # reverse pin logic high/low/pull stuff
-
+        self.play_sounds = False
         Clock.schedule_interval(self.custom_update, .1) # run method every t
 
     def custom_update(self, dt):
@@ -208,7 +231,7 @@ class EuroPiLayout(BoxLayout):
             ref = f'cv{index+1}'
             new_state = 'on' if val != 0 else 'off'
             self.ids[ref].set_state(new_state)
-            if (new_state == 'on'):
+            if (new_state == 'on' and self.play_sounds):
                 if (ref == 'cv1'):
                     # sound1.play()
                     pass
@@ -222,6 +245,10 @@ class EuroPiLayout(BoxLayout):
                     sound5.play()
                 elif (ref == 'cv6'):
                     sound6.play()
+
+    def on_checkbox_click(self, widget):
+        print(f'Checkbox value is {widget.active}')
+        self.play_sounds = widget.active
 
     def on_slider_value_k1(self, widget):
         print(f'Slider value is {int(widget.value)}')

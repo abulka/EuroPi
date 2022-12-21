@@ -198,6 +198,13 @@ sound3 = SoundLoader.load('sounds/wav3.wav')
 sound4 = SoundLoader.load('sounds/wav4.wav')
 sound5 = SoundLoader.load('sounds/wav1.wav')
 sound6 = SoundLoader.load('sounds/wav2.wav')
+sound7 = SoundLoader.load('sounds/12909_sweet_trip_mm_clap_lo.wav')
+sound8 = SoundLoader.load('sounds/12914_sweet_trip_mm_kick_lo.wav')
+sound9 = SoundLoader.load('sounds/12915_sweet_trip_mm_kick_mid.wav')
+sound10 = SoundLoader.load('sounds/pluck-pcm32.wav')
+sound10.volume = 0.3
+sound10.pitch = 0.5
+sound11 = SoundLoader.load('sounds/pluck-pcm32-stretched.wav')
 
 class EuroPiLayout(BoxLayout):
     def __init__(self, **kwargs):
@@ -247,18 +254,25 @@ class EuroPiLayout(BoxLayout):
 
     def play_a_sound(self, ref):
         if (ref == 'cv1'):
+            sound8.play()
             # sound1.play()
             pass
         elif (ref == 'cv2'):
-            sound2.play()
+            # sound2.pitch = 1.5
+            # sound9.play()
+            sound11.play()
         elif (ref == 'cv3'):
+            sound3.pitch = 1.8
             sound3.play()
         elif (ref == 'cv4'):
-            sound4.play()
+            # sound4.pitch = 2
+            sound7.play()
         elif (ref == 'cv5'):
+            sound5.pitch = 2.2
             sound5.play()
         elif (ref == 'cv6'):
-            sound6.play()        
+            # sound6.pitch = 1.9
+            sound10.play()        
 
     def update_leds(self):
 
